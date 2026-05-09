@@ -754,6 +754,13 @@
   /* btn report */
   .btn-report { background:transparent; color:var(--text-dim); border:1px dashed var(--border); font-size:12px; padding:6px 14px; }
   .btn-report:hover { border-color:var(--accent); color:var(--accent); }
+
+  /* 自信なしボタン */
+  .btn-unsure { background:transparent; color:#f0a500; border:1.5px solid #f0a500; font-size:13px; opacity:0.85; }
+  .btn-unsure:hover:not(:disabled) { opacity:1; background:rgba(240,165,0,0.1); }
+  .btn-unsure.active { background:rgba(240,165,0,0.18); opacity:1; font-weight:700; }
+  /* ナビ: 自信なし = オレンジ */
+  .q-dot.unsure { background:rgba(240,165,0,0.15); border-color:#f0a500; color:#f0a500; }
 </style>
 <body>
 
@@ -862,6 +869,7 @@
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn btn-flag" onclick="toggleFlag()" id="btn-flag">☆ 苦手登録</button>
+        <button class="btn btn-unsure" onclick="toggleUnsure()" id="btn-unsure">🔶 自信なし</button>
         <button class="btn btn-report" onclick="reportBug()">🐛 報告</button>
         <button class="btn btn-primary" onclick="checkAnswer()" id="btn-check" disabled>解答確認</button>
         <button class="btn btn-primary" onclick="nextQuestion()" id="btn-next" style="display:none">次へ →</button>
@@ -915,6 +923,7 @@
         <button class="filter-btn active" onclick="filterReview('all', this)">すべて</button>
         <button class="filter-btn" onclick="filterReview('correct', this)">✅ 正解のみ</button>
         <button class="filter-btn" onclick="filterReview('wrong', this)">❌ 不正解のみ</button>
+        <button class="filter-btn" onclick="filterReview('unsure', this)">🔶 自信なし</button>
         <button class="filter-btn" onclick="filterReview('dontknow', this)">❓ わからない</button>
         <button class="filter-btn" onclick="filterReview('skip', this)">⬜ 未回答</button>
       </div>
@@ -3278,6 +3287,7 @@ let dontKnow      = {};  // { qIndex: true }
 let excluded      = {};  // { qIndex: Set<optText> }
 let shuffledOpts  = {};  // { qIndex: [{letter,text},...] }  — shuffled order
 let shuffleEnabled = false; // デフォルトはオフ
+let unsure = {};       // { qIndex: true } — 自信なし
 let timerInterval = null;
 let remainingSeconds = 90 * 60;
 let examMode = 'all';    // 'all' | 'weak' | 'wrong'
@@ -3372,6 +3382,7 @@ function updateNav() {
     const hasSel = userAnswers[i] && userAnswers[i].length > 0;
     if (dontKnow[i]) dot.classList.add('dontknow');
     else if (hasSel) dot.classList.add('answered');
+    if (unsure[i]) dot.classList.add('unsure');
   });
 }
 
@@ -3393,6 +3404,12 @@ function renderQuestion(index) {
   const isFlagged = storage.flags[q.id];
   flagBtn.textContent = isFlagged ? '★ 苦手解除' : '☆ 苦手登録';
   flagBtn.className = 'btn btn-flag' + (isFlagged ? ' active' : '');
+
+  // 自信なしボタン
+  const unsureBtn = document.getElementById('btn-unsure');
+  const isUnsure = unsure[index];
+  unsureBtn.textContent = isUnsure ? '🔶 自信なし（解除）' : '🔶 自信なし';
+  unsureBtn.className = 'btn btn-unsure' + (isUnsure ? ' active' : '');
 
   // Memo
   const memoEl = document.getElementById('memo-input');
@@ -3505,6 +3522,13 @@ function toggleFlag() {
   storage.flags[q.id] = !storage.flags[q.id];
   saveStorage(storage, q.id);  // クラウド同期
   renderQuestion(currentQ);
+}
+
+function toggleUnsure() {
+  if (unsure[currentQ]) delete unsure[currentQ];
+  else unsure[currentQ] = true;
+  renderQuestion(currentQ);
+  updateNav();
 }
 
 function showHint() {
@@ -3703,7 +3727,9 @@ function buildReviewTable(filter) {
       type = 'wrong'; badge = '<span class="badge badge-ng">❌ 不正解</span>';
       myAns = `<span style="color:var(--error)">${(userAnswers[i]||[]).join('、')}</span>`;
     }
-    if (filter !== 'all' && filter !== type) return;
+    const isUnsureQ = unsure[i];
+    if (filter === 'unsure') { if (!isUnsureQ) return; }
+    else if (filter !== 'all' && filter !== type) return;
 
     // History
     const h = storage.history[q.id] || { correct: 0, total: 0 };
@@ -3713,8 +3739,9 @@ function buildReviewTable(filter) {
     const memo = storage.memos[q.id] ? '📝' : '';
 
     const tr = document.createElement('tr');
+    const unsureStr = unsure[i] ? '🔶' : '';
     tr.innerHTML = `<td>${flagStr}問題${q.id}<br><span style="font-size:11px;color:var(--text-dim)">${q.category}</span></td>
-      <td>${badge}</td>
+      <td>${badge} ${unsureStr}</td>
       <td style="font-size:12px">${q.correctTexts.join('、')}</td>
       <td style="font-size:12px">${myAns}</td>
       <td style="font-size:11px;color:var(--text-dim)">${hStr}</td>
@@ -3775,7 +3802,7 @@ function toggleFlagById(qid, cell) {
 // ============================
 function restartExam() {
   clearInterval(timerInterval);
-  currentQ = 0; userAnswers = {}; answered = {}; dontKnow = {}; excluded = {}; shuffledOpts = {};
+  currentQ = 0; userAnswers = {}; answered = {}; dontKnow = {}; excluded = {}; shuffledOpts = {}; unsure = {};
   sessionQuestions = [];
   document.getElementById('q-nav').innerHTML = '';
   document.getElementById('result-screen').style.display = 'none';
