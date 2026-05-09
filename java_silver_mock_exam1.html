@@ -987,7 +987,7 @@ const questions = [
     correctTexts: ["false:true:true:false:false:falseが出力される"],
     selectCount: 1,
     explanation: 'Stringオブジェクトについての問題です。文字列リテラルまたはintern()を実行したStringオブジェクトはインターン化されるため、以降同じ文字列の場合は同じオブジェクトを参照します。newキーワードでStringオブジェクトを生成した場合は、文字列が同じであっても新たなオブジェクトとなります。\n変数s1からs4の文字列は"Java"であり、このうちs2のみが別のStringオブジェクトです。変数s5は"java"、変数s6ではテキストブロックにより"java\\n"が代入されているため、equals()による文字列比較はfalseです。よって11-13行目の出力結果は選択肢Cとなります。'
-  },,
+  },
   {
     id: 2,
     text: `次のプログラムがあります。
@@ -1018,7 +1018,7 @@ const questions = [
     correctTexts: ["static int method(String... s) { return s.length;}"],
     selectCount: 1,
     explanation: 'メソッドの宣言と呼び出しについての問題です。各選択肢のアクセス修飾子は様々に指定されていますが、同一クラス内からのアクセスのため問題ありません。選択肢B、D、Eはインスタンスメソッドのためstaticであるmain()から呼び出すことはできません。選択肢Cはvoidのため戻り値が必要なprintln()内では使用できず、選択肢Fは引数リストが不一致のため呼び出すことはできません。'
-  },,
+  },
   {
     id: 3,
     text: '次の記述のうちコンパイルエラーが発生するものはどれですか。（3つ選択）',
@@ -1039,7 +1039,7 @@ const questions = [
     correctTexts: ["ArrayList<double> list = new ArrayList<>();", "List<String> list = new List<String>();", "ArrayList<Integer> list = Arrays.asList(\"1\", \"2\", \"3\");"],
     selectCount: 3,
     explanation: 'ジェネリクスの型指定についての問題です。コレクションでは基本データ型を扱わないため選択肢C（double）はエラーです。選択肢EはListはインタフェースのためインスタンス化できません。Arrays.asList()の戻り値はList型のためArrayList型には代入できない選択肢Hもエラーです。'
-  },,
+  },
   {
     id: 4,
     text: `次のプログラムがあります。
@@ -1080,7 +1080,7 @@ const questions = [
     correctTexts: [">javac -d . Main.java Test.java\\n>java -classpath . com.x.Main", ">javac -d classes *.java\\n>java -cp classes com.x.Main"],
     selectCount: 2,
     explanation: 'コンパイルオプション-dはパッケージ宣言通りの階層にクラスファイルを生成します。選択肢Aはカレントディレクトリ配下、選択肢Dはclassesディレクトリ配下で適切にクラスファイルが生成され、実行時のクラスパスも正しく指定されています。選択肢Bは-dのディレクトリ指定がなく不完全。選択肢C、Eはコンパイルには成功しますが実行に失敗します。'
-  },,
+  },
   {
     id: 5,
     text: `次のプログラムのコンパイルが完了しています。
@@ -1116,7 +1116,7 @@ const questions = [
     correctTexts: ["Main@13221655, [Ljava.lang.String;@2f2c9b19が出力される"],
     selectCount: 1,
     explanation: '参照型の出力についての問題です。println()の引数に参照変数を指定すると、参照型の場合はクラスの完全修飾名、@、ハッシュコード値が16進数表記で出力されます。また配列の場合は1次元なら"["が1つ、Lの後にクラスの完全修飾名;と続き、@、ハッシュコード値が出力されます。コマンドライン引数を指定していますが、配列の要素を出力するプログラムではないため選択肢Dが正解です。'
-  },,
+  },
   {
     id: 6,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
@@ -1164,7 +1164,7 @@ const questions = [
     correctTexts: ["正常にコンパイル、実行でき、Firstが出力される"],
     selectCount: 1,
     explanation: '継承関係のある例外をキャッチするcatchブロックの指定順についての問題です。catchブロックの指定順は適切であり、コンパイルエラーは発生しません。execute()の引数として渡している5 % 2の結果は1のため、case 1の処理が実行され、呼び出し元にはFirstExceptionがスローされます。したがって、対応するcatchブロックからFirstが出力されます。'
-  },,
+  },
   {
     id: 7,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
@@ -1203,7 +1203,7 @@ const questions = [
     correctTexts: ["[2]:[0, 1, 2]が出力される"],
     selectCount: 1,
     explanation: '2次元配列と算術演算子についての問題です。a[0][0]：前置++によりxが2となった上で+=によりa[0][0]=2。a[1][0]：初期化で0。a[1][1]：a[0].length=1。a[1][2]：後置++のためxのインクリメント前の値2が代入。よってa[0]=[2]、a[1]=[0,1,2]が出力されます。'
-  },,
+  },
   {
     id: 8,
     text: `次のプログラムはTest.javaというファイルに記述されています。このプログラムを正しく説明しているものはどれですか。（1つ選択）
@@ -1233,7 +1233,7 @@ const questions = [
     correctTexts: ["正しい説明はない"],
     selectCount: 1,
     explanation: 'プログラムの実行についての問題です。>java Test.javaはソースファイルモードでの実行であり、ソースファイル名とpublicクラス名が異なっていても実行可能なので選択肢Cの説明は誤り。javacコマンドを使う選択肢A、B、Dはクラス名をTestにするかpublic修飾子を削除する必要があります。選択肢E、Fは実行可能という点は正しいですが出力の説明が間違い（3|5=7が出力される）。よって正しい説明がないためGが正解。'
-  },,
+  },
   {
     id: 9,
     text: `次のプログラムがあります。
@@ -1263,7 +1263,7 @@ const questions = [
     correctTexts: ["public class Derived {}", "final class Derived {}", "abstract class Derived{}", "non-sealed class Derived extends Base {}"],
     selectCount: 4,
     explanation: 'クラスに指定できる修飾子についての問題です。トップレベルのクラスに指定できるアクセス修飾子はpublicか省略のみで、privateとstaticは指定できません（選択肢B、Dは誤り）。abstractとfinalの両方指定は不可（選択肢F誤り）。sealed finalも不可（継承先がfinalのため矛盾：選択肢G誤り）。シールクラスのサブクラスにはnon-sealed、sealed、finalのいずれかを指定するため、選択肢Hは正しい記述です。'
-  },,
+  },
   {
     id: 10,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
@@ -1297,7 +1297,7 @@ const questions = [
     correctTexts: ["コンパイルエラーが発生する"],
     selectCount: 1,
     explanation: 'コンストラクタについての問題です。ItemクラスにはStringを1つ受け取るコンストラクタのみが宣言されているため、new Item()によるオブジェクトの生成はできず、13行目でコンパイルエラーとなります。3-5行目はvoidがあるためコンストラクタではなくメソッドです。'
-  },,
+  },
   {
     id: 11,
     text: '次の記述のうちコンパイルが成功するものはどれですか。（3つ選択）',
@@ -1316,7 +1316,7 @@ const questions = [
     correctTexts: ["A", "1", "2"],
     selectCount: 3,
     explanation: '2次元配列とデータ型についての問題です。選択肢Aはchar型リテラルが暗黙変換でint型に変換されるためOK。選択肢EはObject[][]でf[0]は要素数0、f[1]はStringとIntegerがObject型で扱われ正しい。選択肢Bはboolean型変数にBoolean[][]は代入不可。選択肢Cは要素数と初期値の両方指定は不可。選択肢DはMath.round()の戻り値はlong型のためDouble[][]には代入不可。'
-  },,
+  },
   {
     id: 12,
     text: `次のプログラムに2行目の記述がある場合に残りのコードを正しく説明しているものはどれですか。（1つ選択）
@@ -1349,7 +1349,7 @@ const questions = [
     correctTexts: ["Dは2行目のメソッドと宣言が重複するためコンパイルエラーが発生する"],
     selectCount: 1,
     explanation: 'メソッドについての問題です。2行目にはJavaアプリケーションの実行時に呼ばれるmain()をすでに宣言しており、Dは同じシグネチャのメソッドを宣言するためコンパイルエラーになります。Aはコンストラクタです。main()の引数は可変長でも記述でき、変数名はargs以外も可能です。'
-  },,
+  },
   {
     id: 13,
     text: '次の記述のうちコンパイルエラーが発生するものはどれですか。（2つ選択）',
@@ -1368,7 +1368,7 @@ const questions = [
     correctTexts: ["Record record(String name) {}", "record Product(double price) extends Record {}"],
     selectCount: 2,
     explanation: 'レコードクラスの宣言についての問題です。選択肢Bはレコードの宣言にrecord（小文字）でなくRecord（大文字）を使用しているためエラー。選択肢Eはレコードクラスは暗黙的にjava.lang.Recordを継承するため明示的にextends Recordを記述することはできません。選択肢A（コンポーネントなし）、C（コンポーネント名にrecordを使用）、D、F（finalの明示指定）はすべて適切な宣言です。'
-  },,
+  },
   {
     id: 14,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
@@ -1403,7 +1403,7 @@ const questions = [
     correctTexts: ["Dでコンパイルエラーが発生する"],
     selectCount: 1,
     explanation: 'ローカル変数の初期化と定数についての問題です。varで宣言したFLAGは初期化済みです。4行目のVALUEはif文のtrueの処理として初期化していますが、条件式がfalseの場合は初期化されないため、VALUEにアクセスするDでコンパイルエラーとなります。'
-  },,
+  },
   {
     id: 15,
     text: `次のプログラム（抜粋）があります。
@@ -1444,7 +1444,7 @@ const questions = [
     correctTexts: ["NumberFormatException | ArrayIndexOutOfBoundsException e", "Exception e"],
     selectCount: 2,
     explanation: 'multi-catchについての問題です。選択肢Bは構文間違い（参照変数eは最後に1回だけ記述）。選択肢Aはmulti-catchで継承関係のあるクラスを記述することはできないため誤り（RuntimeExceptionはNumberFormatExceptionの親クラス）。選択肢C（NumberFormatException | ArrayIndexOutOfBoundsException e）は適切な指定。選択肢E、Fは一方の例外のみ処理で不十分。選択肢Gはすべての例外のスーパークラスExceptionでキャッチする正しい指定。'
-  },,
+  },
   {
     id: 16,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
@@ -1482,7 +1482,7 @@ const questions = [
     correctTexts: ["method()の呼び出し方法が適切でないためコンパイルエラーが発生する"],
     selectCount: 1,
     explanation: 'staticメソッドのmain()からインスタンスメソッドのmethod()を呼び出すことはできません。またthis.はインスタンスメンバを指し示すキーワードのためstaticメソッド内では使用することはありません。Main.method()のようにクラス名でインスタンスメソッドを呼び出すことはできず、コンパイルエラーとなります。'
-  },,
+  },
   {
     id: 17,
     text: `次のプログラム（抜粋）があります。
@@ -1509,7 +1509,7 @@ const questions = [
     correctTexts: ["int i; for (i = 0; i < vowels.length;) { System.out.print(vowels[i]); i++; }", "for (var v = 0; v < vowels.length; v++) System.out.print(vowels[v]);"],
     selectCount: 2,
     explanation: 'for文の指定についての問題です。選択肢Cはfor文に入る前にカウンタ変数の宣言を行い、初期化をfor文内で行っています。選択肢Eではvarを使用しています。どちらも適切で設問のfor文と同じ出力となります。選択肢Aは条件式が<=のためArrayIndexOutOfBoundsExceptionがスローされます。選択肢Dは1度のループでカウンタ変数が2ずつ増え条件式もないためエラー。選択肢Bはカウンタ変数が1から始まるためeiouのみ出力されます。'
-  },,
+  },
   {
     id: 18,
     text: `次のプログラムがあります。
@@ -1547,7 +1547,7 @@ const questions = [
     correctTexts: ["book.title"],
     selectCount: 1,
     explanation: 'オブジェクトのメンバアクセスについての問題です。Bookクラスのidはprivate static finalのため、privateが指定されているのでMainクラスからアクセスすることはできません（A、Cは誤り）。titleのアクセス修飾子は省略されているためMainクラスからアクセス可能で、book.titleと記述することで"Java Silver"が出力されます。this.は同クラス内でのみ使用可能で、Mainクラスでは使用できません。'
-  },,
+  },
   {
     id: 19,
     text: `次のプログラム（抜粋）があります。
@@ -1586,7 +1586,7 @@ const questions = [
     correctTexts: ["String text = switch (c) {\\n  case 97, 98 -> \"a | b | \";\\n  case 99, 100 -> \"c | d | \";\\n  case 101 -> \"e | \";\\n  default -> \"the others\";\\n};", "String text = switch (c) {\\n  case 97, 98: yield \"a | b | \";\\n  case 99, 100: yield \"c | d | \";\\n  case 101: yield \"e | \";\\n  default: yield \"the others\";\\n};"],
     selectCount: 2,
     explanation: 'switch文とswitch式についての問題です。switch式では":"とyieldの組み合わせか"->"を使用して値を返します。またdefaultは省略できません。選択肢Aはcaseの記述が不要で構文間違い（caseキーワードを重ねてはいけない）。選択肢Cはdefaultの処理がないためコンパイルエラー。選択肢Eは1つのswitch内で":"と"->"の両方を使用することはできないためコンパイルエラー。'
-  },,
+  },
   {
     id: 20,
     text: `次のプログラムを正しく説明しているものはどれですか。（1つ選択）
@@ -1619,7 +1619,7 @@ const questions = [
     correctTexts: ["正常にコンパイル、実行でき、531-1-3が出力される"],
     selectCount: 1,
     explanation: 'for文のカウンタ変数や条件式についての問題です。カウンタ変数をfor文に入る前に宣言することも可能です。また条件式にマイナス値は使用可能であり、カウンタ変数の更新も問題ないため正常に実行できます。5から-5より大きい間、カウンタ変数の値を2ずつ減らしながら出力を行うため、5,3,1,-1,-3が出力されます。'
-  },,
+  },
   {
     id: 21,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
@@ -1666,7 +1666,7 @@ const questions = [
     correctTexts: ["T top 10: T bottom 10: が出力される"],
     selectCount: 1,
     explanation: '継承関係がある場合のメンバアクセスについての問題です。Top型の変数でアクセスすると、staticメソッドとメンバ変数はTop型のメンバにアクセスします（それぞれT、10が固定）。一方インスタンスメソッドprint()のみ、参照しているオブジェクトのメソッドが実行されます（top、bottom）。よってT top 10: T bottom 10: が出力される選択肢Bが正解です。'
-  },,
+  },
   {
     id: 22,
     text: `次のプログラム（抜粋）の9行目までの処理が完了したタイミングで、ガベージコレクタの対象となるオブジェクトはいくつありますか。（1つ選択）
@@ -1690,7 +1690,7 @@ const questions = [
     correctTexts: ["2"],
     selectCount: 1,
     explanation: 'オブジェクトのライフサイクルについての問題です。オブジェクトは全部で4つ生成されています。最初のobj1は変数i1とi4から参照されますが、i1にnullが代入され、その後i4の参照も別のオブジェクト（obj4）に切り替わるため、どこからも参照されなくなりGCの対象です。またobj2はi2の参照が切り替わり孤立します。よってガベージコレクタの対象は2つです。'
-  },,
+  },
   {
     id: 23,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
@@ -1724,7 +1724,7 @@ const questions = [
     correctTexts: ["4が出力される"],
     selectCount: 1,
     explanation: 'do-while文についての問題です。最初のdoの処理ではiの値が3となり、if文の条件式はfalseとなるため、continueは実行されません。7行目の出力処理ではprintln(++i)と前置のインクリメントがあるため、最初にiの値が4になり、次に出力の処理が行われるため4が出力されます。8行目のwhileの条件式はi++と後置のため、i < 10が評価されてからiの値が5となります。2回目のdoの処理ではiが6になるためif文がtrueとなりcontinueが実行されます。以降iの値は必ず偶数となりif文も常にtrueとなるため出力処理はスキップされ続け、i < 10でなくなるとdo-while文を抜けます。'
-  },,
+  },
   {
     id: 24,
     text: `次のプログラム（抜粋）をコンパイル、実行するとどのような結果になりますか。（1つ選択）
@@ -1760,7 +1760,7 @@ const questions = [
     correctTexts: ["ABCDFHが出力される"],
     selectCount: 1,
     explanation: 'リストの使用と制御文の組み合わせについての問題です。indexが3以降の奇数の場合は、内側のif文のインクリメントとループのインクリメントにより値が2ずつ増えます。この結果0,1,2,3,5,7番目の要素（A,B,C,D,F,H）が出力されます。'
-  },,
+  },
   {
     id: 25,
     text: `次のプログラムがあります。
@@ -1799,7 +1799,7 @@ const questions = [
     correctTexts: ["MyClass.a + \":\" + new MyClass().getB()", "new MyClass().a + \":\" + new MyClass().getB()"],
     selectCount: 2,
     explanation: 'staticとインスタンスについての問題です。変数aはstaticなのでMyClass.aでアクセス可能です。変数bとgetB()はインスタンスメンバです。選択肢CはMyClass.a（staticメンバへのアクセス）とnew MyClass().getB()（インスタンス化してアクセス）の適切な形です。選択肢Eもインスタンス化した上で変数aにアクセスしており可能です。選択肢A、Bはbがprivateのため不可。選択肢Fのgetが()はprivateのため不可。'
-  },,
+  },
   {
     id: 26,
     text: `次のプログラムを正しく説明しているものはどれですか。（3つ選択）
@@ -1850,7 +1850,7 @@ const questions = [
     correctTexts: ["Aのvalidate()は3回呼ばれるが、11行目からの出力は1度だけ行われる", "プログラムを実行すると、java.lang.NullPointerExceptionが出力される", "プログラムを実行すると、java.lang.NumberFormatExceptionが出力される"],
     selectCount: 3,
     explanation: '例外の再スローとThrowableクラスのメソッドについての問題です。選択肢Aは正解：validate()の呼び出しで例外がスローされない2つ目の要素のみ値が出力されます。選択肢Bは誤り：ループごとに適切に例外処理が行われるため、catchブロックの処理は複数回実行されます。選択肢Cも誤り：InvalidDataExceptionのコンストラクタに適切に値を渡しています。選択肢E、Fは正解：InvalidDataExceptionに関連付けられた例外の原因として出力されます。'
-  },,
+  },
   {
     id: 27,
     text: `次のプログラム（抜粋）をコンパイル、実行するとどのような結果になりますか。（1つ選択）
@@ -1880,7 +1880,7 @@ const questions = [
     correctTexts: ["truetruetrueが出力される"],
     selectCount: 1,
     explanation: 'テキストブロックと演算子についての問題です。テキストブロックでは余分な空白は取り除かれるため、変数textが参照するオブジェクトはs2と同じ空文字列（""）です。7行目：textはnullでないのでtrue。8行目：textとs1はどちらも空文字列なのでequals()はtrue。9行目：s1とs2は同じ文字列リテラルの空文字列でインターン化されているため"=="はtrue、それを反転してfalseではなく...s1="  "とs2=""は内容が異なるためfalse、反転してtrue。よってtruetruetrueとなります。'
-  },,
+  },
   {
     id: 28,
     text: `次のプログラムのコンパイルが完了しています。以下の方法で実行するとどのような結果になりますか。（1つ選択）
@@ -1911,7 +1911,7 @@ const questions = [
     correctTexts: ["0010 0011が出力される"],
     selectCount: 1,
     explanation: 'コマンドライン引数についての問題です。スペースを含めた文字列を1つのコマンドライン引数として渡す場合は「""」でその文字列を囲みます。設問のコマンドを実行すると、プログラムでは"00 01"、"0010"、"0011"の3つの文字列を配列で受け取ります。このうち2番目（args[1]）と3番目（args[2]）の要素を、間にスペースを入れて出力しているため選択肢Cが正解です。'
-  },,
+  },
   {
     id: 29,
     text: `次のプログラムでコンパイルエラーが発生する記述はどれですか。（1つ選択）
@@ -1948,7 +1948,7 @@ const questions = [
     correctTexts: ["D"],
     selectCount: 1,
     explanation: 'multi-catchと通常のcatchブロックについての問題です。multi-catchを使用する場合、例外の参照変数は暗黙的にfinalとなるため値の再代入はできません。選択肢Dの位置（Aのcatch）で新たなNullPointerExceptionのオブジェクトを代入しているためコンパイルエラーになります。選択肢Eのように通常のcatchブロックであれば、別の例外オブジェクトを再代入することは可能です。'
-  },,
+  },
   {
     id: 30,
     text: `次のプログラム（抜粋）があります。
@@ -1980,7 +1980,7 @@ const questions = [
     correctTexts: ["(1) double[] arr : dArr\\n(2) double d : arr", "(1) var x : dArr\\n(2) var d : x"],
     selectCount: 2,
     explanation: '2次元配列の要素へのアクセスについての問題です。拡張for文で2次元配列を扱う場合、外側のループで1次元目の配列（double[]型）を受け取り、内側のループでその各要素（double型）を受け取ります。選択肢AとCが正しい組み合わせです（varの使用も可能）。選択肢Bは外側と内側が逆。選択肢Dは":"の右側に型を記述しているため不正。'
-  },,
+  },
   {
     id: 31,
     text: `次のプログラムのコンパイルが完了しています。以下の方法で実行するとどのような結果になりますか。（1つ選択）
@@ -2028,7 +2028,7 @@ const questions = [
     correctTexts: ["Aが出力される"],
     selectCount: 1,
     explanation: 'オーバーロードされたメソッド呼び出しの優先度についての問題です。呼び出し元の引数リストがdouble型、int型のため、引数リストが完全一致するメソッド宣言がありませんが、基本データ型の暗黙の型変換（long→double）が可能なため、method(double, double)が呼ばれます。優先順は：①基本データ型の暗黙の型変換 → ②オートボクシング/アンボクシング → ③可変長引数。'
-  },,
+  },
   {
     id: 32,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
@@ -2070,7 +2070,7 @@ const questions = [
     correctTexts: ["2:100.0 1:0.0 3:0.0が出力される"],
     selectCount: 1,
     explanation: 'アクセス修飾子、thisキーワードについての問題です。メンバ変数priceはprivateですが同じクラス内であれば13行目（a.price=100.0）のアクセスは可能。Itemコンストラクタの引数priceへの代入（price=price）はthis.priceとなっておらず、ローカル変数priceに値が代入されるだけです。そのためbのpriceは0.0のまま。aはprivateフィールドに直接アクセスして100.0を設定しているため、a.getPrice()は0.0、b.getPrice()は0.0、合わせて"2:100.0 1:0.0 ..."ではなく正確には0.0:0.0の問題ですが選択肢Fが正解。'
-  },,
+  },
   {
     id: 33,
     text: `次のプログラムの説明として正しくないものはどれですか。（2つ選択）
@@ -2102,7 +2102,7 @@ const questions = [
     correctTexts: ["Cのvarは可変長引数にすることができないため、第2引数をvar yと通常の変数にすることでコンパイルが成功する", "Fのように同じデータ型で配列と可変長引数の両方を指定することはできず、コンパイルエラーが発生する"],
     selectCount: 2,
     explanation: '可変長引数のルールについての問題です。選択肢Cについて、メソッドの引数にvarを使用することはできないため、var yに変更してもコンパイルエラーとなります。選択肢Fの指定（配列と可変長引数の両方）は可能です。可変長引数は内部で配列として扱われますが、第1引数の配列と可変長の配列は別の配列であり問題なく扱えます。これらCとFが「正しくない説明」です。'
-  },,
+  },
   {
     id: 34,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
@@ -2143,7 +2143,7 @@ const questions = [
     correctTexts: ["James:James:N/Aが出力される"],
     selectCount: 1,
     explanation: 'コンストラクタ、オブジェクトの参照関係についての問題です。oneとtwoは同じオブジェクトを参照しており、11行目でnameを"James"に変更するため12行目の出力はJames:Jamesです。13行目で2つ目のオブジェクトを生成しており、引数なしのコンストラクタには処理がありませんが、インスタンス初期化子によりnameには"N/A"が設定されます。'
-  },,
+  },
   {
     id: 35,
     text: '次の記述のうち例外処理が必須のものはどれですか。（2つ選択）',
@@ -2163,7 +2163,7 @@ const questions = [
     correctTexts: ["java.io.IOException", "java.io.FileNotFoundException"],
     selectCount: 2,
     explanation: 'チェック例外と非チェック例外についての問題です。java.lang.Exceptionを継承したクラスのうち、java.lang.RuntimeExceptionとそのサブクラス以外はチェック例外です。java.io.IOExceptionはチェック例外で、java.io.FileNotFoundExceptionはそのサブクラスのため例外処理が必須です。選択肢Bはjava.lang.Errorの系列のサブクラスで非チェック例外です。'
-  },,
+  },
   {
     id: 36,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
@@ -2201,7 +2201,7 @@ const questions = [
     correctTexts: ["コンパイルエラーが発生する"],
     selectCount: 1,
     explanation: '演算子と優先順位についての問題です。9行目では文字列に-演算子を使用しています。文字列に+演算子は文字列連結となりますが、文字列に-演算子は使用できないためコンパイルエラーが発生します。'
-  },,
+  },
   {
     id: 37,
     text: `次のプログラム（抜粋）でコンパイルエラーが発生する行はどこですか。（3つ選択）
@@ -2240,7 +2240,7 @@ const questions = [
     correctTexts: ["A", "B", "C"],
     selectCount: 3,
     explanation: 'ローカル変数の型推論についての問題です。varはメンバ変数には使用できません。また型推論ができないためnullの代入もできません。そしてカンマ区切りで複数の変数宣言をすることもできないため、選択肢A（複数宣言）、B（初期化なし）、C（null代入）がコンパイルエラーとなります。'
-  },,
+  },
   {
     id: 38,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
@@ -2285,7 +2285,7 @@ const questions = [
     correctTexts: ["Y:Y:Y:N:が出力される"],
     selectCount: 1,
     explanation: 'オブジェクトの参照関係についての問題です。15-18行目で比較を行い、結果の文字列として"Y:"か"N:"を変数resultに文字列連結しています。上から、参照が一致するためY:、c2とc3のメンバ変数のcountryの参照先が一致するかを比較し反転してY:、c2とc3のCountryレコードのnameが一致するかを比較するためY:、最後にc3とc4のCustomerのnameが一致するかを比較するためN:が代入されます。'
-  },,
+  },
   {
     id: 39,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
@@ -2325,7 +2325,7 @@ const questions = [
     correctTexts: ["コンパイルエラーが発生する"],
     selectCount: 1,
     explanation: 'catchブロックの指定順についての問題です。複数のcatchブロックで継承関係のある例外クラスを指定する場合は、サブクラスの例外を先にキャッチします。この順番が逆になっているため、2つ目のcatchブロックに制御が移ることはなく、コンパイルエラーになります。'
-  },,
+  },
   {
     id: 40,
     text: `次のプログラムを正しく説明しているものはどれですか。（1つ選択）
@@ -2371,7 +2371,7 @@ const questions = [
     correctTexts: ["正常にコンパイル、実行でき、A1BC2Cが出力される"],
     selectCount: 1,
     explanation: '継承関係におけるコンストラクタの実行順についての問題です。new C()により、this(2)でC(int)コンストラクタが呼ばれ、その処理の中で暗黙的にsuper()が呼ばれ、B(int, String)のコンストラクタに制御が移り、さらにsuper(1)でA(int)のコンストラクタが呼ばれます。よってA→B→Cの順でオブジェクトが初期化され、A1BC2Cが出力されます。'
-  },,
+  },
   {
     id: 41,
     text: `次のプログラムがあります。
@@ -2422,7 +2422,7 @@ const questions = [
     correctTexts: ["D", "E"],
     selectCount: 2,
     explanation: 'アクセス修飾子についての問題です。選択肢DはSuperクラスのメンバ変数nameがprivateのため、異なるクラスからはアクセスできません。選択肢EのSub.nameは、クラス名でnameにアクセスしていますが、nameはstaticではなくインスタンス変数のためコンパイルエラーとなります。選択肢Aはアクセス範囲を広げる方向のオーバーライドで問題なし。選択肢CはprotectedなのでサブクラスからOK。'
-  },,
+  },
   {
     id: 42,
     text: `次のプログラムがあります。
@@ -2467,7 +2467,7 @@ const questions = [
     correctTexts: ["Book book = new Book();\\nSystem.out.println(book.getGenre() + \":\" + book.getTitle());", "Music music = new Music(\"Waltz\", \"Francois\");\\nSystem.out.println(music.genre() + \":\" + music.composer());"],
     selectCount: 2,
     explanation: 'レコードクラスの生成とコンポーネントへのアクセスについての問題です。N/A:A Bookの出力には引数なしコンストラクタでBookを生成してgetterメソッドを使う選択肢Aが正解。選択肢B、Cの場合はBook@...のような出力となります。Waltz:Francoisの出力については、レコードにはコンポーネントと同じ名前のアクセサメソッドが生成されるため、genre()とcomposer()でアクセスする選択肢Fが正解。選択肢Dは引数なしでMusicレコードは生成できません。'
-  },,
+  },
   {
     id: 43,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
@@ -2513,7 +2513,7 @@ const questions = [
     correctTexts: ["Bar:class Base:abstract Base:abstract Base:abstract が出力される"],
     selectCount: 1,
     explanation: '参照型の型変換とメンバ変数へのアクセスについての問題です。引数がBar型のメソッドではBarクラスのtype（class）が出力され、可変長引数を受け取るメソッドではBaseクラスのtype（abstract）にアクセスするためすべてabstractが出力されます。引数なしで可変長引数のprint()を呼び出す場合は要素数0の配列を受け取るため、拡張for文は実行されず何も出力されません。'
-  },,
+  },
   {
     id: 44,
     text: `次のプログラムがあります。コンパイルを成功させるために6行目に必要な記述はどれですか。（1つ選択）
@@ -2545,7 +2545,7 @@ const questions = [
     correctTexts: ["public StringBuilder x() { return new StringBuilder(name); }"],
     selectCount: 1,
     explanation: 'メソッドのオーバーライドについての問題です。オーバーライドを行う際に、戻り値についてはスーパークラスのメソッドと同じ型かそのサブクラスに変更できます。CharSequenceはStringやStringBuilderが実装しているインタフェースです。インタフェースの抽象メソッドは暗黙的にpublicのため、可視性を狭める変更（A、B）はできません。選択肢Dのreturn ObjectはCharSequenceを実装していないため不可。選択肢C、Eは引数リストを変更しているためオーバーライドになりません。選択肢Fは適切にオーバーライドされています。'
-  },,
+  },
   {
     id: 45,
     text: `次のプログラムを正しく説明しているものはどれですか。（3つ選択）
@@ -2583,7 +2583,7 @@ const questions = [
     correctTexts: ["Aの2行について変更するとコンパイルが成功する（interface Y extends X、class One implements Y）", "クラスOneでオーバーライドを行い（public Number calculate）X.super.calculate()を呼び出すとコンパイルが成功する", "クラスOneでオーバーライドを行い（public Integer calculate）return price-100とするとコンパイルが成功する"],
     selectCount: 3,
     explanation: 'インタフェースのdefaultメソッドについての問題です。XとYに同じシグネチャのcalculate()が存在するためOneでは衝突が発生します。選択肢Aのように継承関係の構造を変えると解消します。選択肢C、DのようにOneでオーバーライドしても解消します（Integerはnumberのサブクラスなので戻り値の変更も可能）。「インタフェース名.super.メソッド名()」は直接の実装クラスのみで使用可能なため、選択肢BのprivateメソッドやEのY.super（Twoから）は不可。'
-  },,
+  },
   {
     id: 46,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
@@ -2628,7 +2628,7 @@ const questions = [
     correctTexts: ["x:5, y:0が出力される"],
     selectCount: 1,
     explanation: 'for文とswitch文、演算子についての問題です。"Sun"でx=2（break）。"Mon"でx+=a++(x=2+1=3、その後a=2）、fall throughしてcase"Wed"でa=3、continueで次ループへ。"Wed"でcase"Wed"が実行されa=4、continueで次ループへ。"Fri"でy=--b（b=0、y=0）、fall throughしてcase"Sat"でx=3+2=5。"Sat"でx=5+2=7ではなく直前のfall throughで既にcase"Sat"が実行されているため、Satでは再度case"Sat"のみ: x=5+2=7...再確認すると最終的にx:5, y:0が正解です。'
-  },,
+  },
   {
     id: 47,
     text: `次のプログラムのコンパイルが完了しています。以下の方法で実行するとどのような結果になりますか。（1つ選択）
@@ -2671,7 +2671,7 @@ const questions = [
     correctTexts: ["ACABCABCが出力される"],
     selectCount: 1,
     explanation: 'try-catch-finallyの実行順についての問題です。コマンドライン引数Dukeを受け取るmethod()では、3回のループの中で例外処理が行われています。1回目のループではtryでAを出力後にargs[0]（Duke）が代入されますが出力しません。finallyでCが出力されます。2回目と3回目のループではargs[i]へのアクセスでArrayIndexOutOfBoundsExceptionがスローされるため、catchでBが出力され、finallyでCが出力されます。よってACABCABCが出力されます。'
-  },,
+  },
   {
     id: 48,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
@@ -2713,7 +2713,7 @@ const questions = [
     correctTexts: ["CでClassCastExceptionがスローされる"],
     selectCount: 1,
     explanation: '参照型の型変換についての問題です。DerivedオブジェクトはBase型、One型に代入することができます。3行目でDerivedオブジェクトをOne型に代入（B）、4行目でDerived型に戻す（C）は適切です。しかしBaseオブジェクトはOneインタフェースを実装していないため、BaseオブジェクトをOne型にキャストするとClassCastExceptionがスローされます。7行目までは正常に実行できるため"ONEONE"までは出力が行われます。'
-  },,
+  },
   {
     id: 49,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
@@ -2758,7 +2758,7 @@ const questions = [
     correctTexts: ["if(p instanceof Food) { Food f = (Food)p; System.out.print(f.name()); }"],
     selectCount: 1,
     explanation: 'ArrayListとinstanceofについての問題です。execute()ではinstanceofでパターンマッチングを行い、pの参照がFood型の場合にname()の値を出力するため"SnackOrange"の出力となります。選択肢AはFoodでない場合（Music）にFoodにキャストするためClassCastExceptionがスローされます。選択肢BはMusicでない場合にキャストは正しいですが出力が異なります。選択肢CはProductにname()は定義されていないためコンパイルエラー。選択肢DはFood型チェック後にキャストしてname()を呼び出す正しい記述。'
-  },,
+  },
   {
     id: 50,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
@@ -2803,7 +2803,7 @@ const questions = [
     correctTexts: ["A:B:Reader-3:Reader-2:Reader-1:C:が出力される"],
     selectCount: 1,
     explanation: 'ネストされたtry-with-resourcesの実行順についての問題です。例外がスローされないため、"A:B:"が出力されtryブロックの処理が終わると、指定と逆順でリソースのクローズ処理が行われます（Reader-3、Reader-2、Reader-1の順）。そして最後にfinallyブロックの"C:"が出力されます。'
-  },,
+  },
   {
     id: 51,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
@@ -2858,7 +2858,7 @@ const questions = [
     correctTexts: ["コンパイルエラーが発生する"],
     selectCount: 1,
     explanation: 'staticとインスタンスについての問題です。SuperクラスのstataicメソッドとSubクラスのインスタンスメソッドにはオーバーライド関係は成り立たず、16行目でコンパイルエラーとなります。（Superクラスのstaticメソッドをインスタンスメソッドでオーバーライドしようとしているため）'
-  },,
+  },
   {
     id: 52,
     text: '次のローカル変数の宣言のうち、コンパイルエラーが発生するものはどれですか。（3つ選択）',
@@ -2878,7 +2878,7 @@ const questions = [
     correctTexts: ["public var x = \"1_000_000\".length();", "static final Integer INTVALUE = 1_000;", "boolean true = true;"],
     selectCount: 3,
     explanation: 'ローカル変数の宣言についての問題です。選択肢B、Eはpublicやstaticはクラスのメンバに指定する修飾子でローカル変数には使用できません。選択肢Gのtrueはboolean型のリテラルであり変数名には使用できません。選択肢Aの"$"や"_"は識別子として使用可能。選択肢CはfinalはローカルにOK、Math.random()からdouble型と推論可能。選択肢Dはvarを変数名として使用しており紛らわしいが宣言としては適切。'
-  },,
+  },
   {
     id: 53,
     text: `次のプログラムを正しく説明しているものはどれですか。（3つ選択）
@@ -2918,7 +2918,7 @@ const questions = [
     correctTexts: ["Cのようにfinalクラスでなくてもfinalメソッドを宣言することはできる", "DのようにクラスBをfinalにする場合はmethodX()のオーバーライドが必須となる", "インタフェースにシールされたインタフェースを継承する場合、Fのようにfinal以外を指定する必要がある"],
     selectCount: 3,
     explanation: 'クラスやインタフェースなどに指定できる修飾子についての問題です。選択肢A、Bは誤り（抽象クラスのコンストラクタは宣言可能。インタフェースの抽象メソッドはpublic abstractが暗黙指定ですが抽象クラスのメソッドには明示的なabstractが必要）。選択肢C、Dは正しい説明。選択肢Eは誤り（sealedインタフェースでも同一ファイル内にサブクラスがある場合はpermitsを省略可能）。選択肢Fは正しく、インタフェースの場合はsealedかnon-sealedを指定します。選択肢Gは誤り（レコードは暗黙的にfinalのため、sealedやnon-sealedの指定はできません）。'
-  },,
+  },
   {
     id: 54,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
@@ -2959,7 +2959,7 @@ const questions = [
     correctTexts: ["BDが出力される"],
     selectCount: 1,
     explanation: 'StringとStringBuilderクラスのメソッドについての問題です。9行目はStringBuilderにequals()がないためObjectクラスのequals()が使われfalseです（Aが出力されない）。10行目のequalsIgnoreCase()はtrueなのでBが出力されます。11行目のequals()は大文字/小文字を区別するためfalse（Cは出力されない）。12行目のlastIndexOf()がtrueなのでDが出力されます。14行目のcharAt()がfalseのため&&全体もfalse（Eは出力されない）。よってBDが出力されます。'
-  },,
+  },
   {
     id: 55,
     text: `次のプログラム（抜粋）があります。
@@ -2994,7 +2994,7 @@ const questions = [
     correctTexts: ["public void calc(double d) throws Exception {}", "public void calc(double d) throws MyException {}"],
     selectCount: 2,
     explanation: 'throwsが指定されたメソッドのオーバーライドについての問題です。オーバーライド元のthrowsにチェック例外が指定されている場合、オーバーライドするメソッドは同じ例外・そのサブクラス・throwsの省略のみ許可されます。選択肢CのExceptionはIOExceptionのスーパークラスのためエラー。選択肢FのMyExceptionはIOExceptionのサブクラスではないためエラー。選択肢AはRuntimeExceptionは非チェック例外のため任意に指定可能。選択肢EのMyIOExceptionはIOExceptionのサブクラスなのでOK。'
-  },,
+  },
   {
     id: 56,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
@@ -3032,7 +3032,7 @@ const questions = [
     correctTexts: ["x:4, y:1が出力される"],
     selectCount: 1,
     explanation: 'staticとインスタンスについての問題です。Otherのコンストラクタにはxとyをインクリメントする処理があります。オブジェクトを4つ生成しているためstatic変数xの値は4、インスタンス変数yの値はオブジェクトごとに1になります。printメソッド内にはx--、y--の演算がありますが後置デクリメントのため出力された後に減算されます。よって出力時の値はx:4, y:1のままです。'
-  },,
+  },
   {
     id: 57,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
@@ -3071,7 +3071,7 @@ const questions = [
     correctTexts: ["50.0:25.0:25.0:25.0が出力される"],
     selectCount: 1,
     explanation: '基本データ型と参照型についての問題です。基本データ型変数への代入は値のコピーとなるため、xは50.0F、yは25.0Fと別の値が管理されます。一方参照型は参照情報のコピーであり、参照先のオブジェクトは1つのため、one.valueで10減らした値（35-10=25）は、another.valueでアクセスした場合も同じ値となります。よって50.0:25.0:25.0:25.0が出力されます。'
-  },,
+  },
   {
     id: 58,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
@@ -3117,7 +3117,7 @@ const questions = [
     correctTexts: ["try: close:Resource2: close:Resource1: catch:Exception! finally:が出力される"],
     selectCount: 1,
     explanation: 'try-with-resourcesの実行順についての問題です。リソースのクローズは指定と逆順になります。例外がスローされる場合もcloseの処理が先に行われるため、try → close → catch → finallyブロックの実行順となります。r2のcloseでExceptionがスローされますが、まずr2のcloseが実行され、次にr1のcloseが実行されます。その後catchブロック、最後にfinallyが実行されます。'
-  },,
+  },
   {
     id: 59,
     text: `次のプログラムを正しく説明しているものはどれですか。（2つ選択）
@@ -3150,7 +3150,7 @@ const questions = [
     correctTexts: ["Main.javaのコンパイルにおいてCの行が原因でコンパイルエラーが発生する", "Foo.javaとBar.javaはそれぞれ単体でコンパイルが成功する"],
     selectCount: 2,
     explanation: 'パッケージとインポート宣言についての問題です。import宣言で「*」が使用できるのはクラスの指定のみのためA（import ex.*.*）は誤りです。選択肢Cは正解：Barクラスにはpublicが指定されていないため、異なるパッケージに所属するMainクラスからのインスタンス化はできず、new Bar()がコンパイルエラーの原因となります。選択肢BのインポートはBarクラスを明示的に指定していないためコンパイルエラーにはなりません。選択肢FはFooとBarはMainクラスを必要としていないため単体でコンパイルが成功します。'
-  },,
+  },
   {
     id: 60,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
@@ -3379,6 +3379,7 @@ function updateNav() {
 // RENDER
 // ============================
 function renderQuestion(index) {
+  if (!sessionQuestions || !sessionQuestions[index]) return;
   currentQ = index;
   const q = sessionQuestions[index];
   if (!excluded[index]) excluded[index] = new Set();
@@ -3541,7 +3542,7 @@ function checkAnswer() {
 
 function nextQuestion() { if (currentQ < sessionQuestions.length - 1) renderQuestion(currentQ + 1); }
 function prevQuestion() { if (currentQ > 0) renderQuestion(currentQ - 1); }
-function goToQuestion(i) { renderQuestion(i); }
+function goToQuestion(i) { if (sessionQuestions && sessionQuestions[i]) renderQuestion(i); }
 
 function updateProgress() {
   const done = Object.keys(answered).length + Object.keys(dontKnow).length;
@@ -3602,6 +3603,18 @@ function copyReport() {
 // ============================
 function finishExam() {
   clearInterval(timerInterval);
+
+  // 選択肢を選んでいるが「解答確認」を押していない問題を自動採点・記録
+  sessionQuestions.forEach((q, i) => {
+    if (!answered[i] && !dontKnow[i] && userAnswers[i] && userAnswers[i].length > 0) {
+      answered[i] = true;
+      if (!storage.history[q.id]) storage.history[q.id] = { correct: 0, total: 0 };
+      storage.history[q.id].total++;
+      if (checkCorrect(i)) storage.history[q.id].correct++;
+      saveStorage(storage, q.id);
+    }
+  });
+
   document.getElementById('question-screen').style.display = 'none';
   document.getElementById('result-screen').style.display = 'block';
 
@@ -3763,6 +3776,8 @@ function toggleFlagById(qid, cell) {
 function restartExam() {
   clearInterval(timerInterval);
   currentQ = 0; userAnswers = {}; answered = {}; dontKnow = {}; excluded = {}; shuffledOpts = {};
+  sessionQuestions = [];
+  document.getElementById('q-nav').innerHTML = '';
   document.getElementById('result-screen').style.display = 'none';
   document.getElementById('intro-screen').style.display = 'block';
   document.getElementById('timer-display').textContent = '90:00';
