@@ -933,6 +933,18 @@
     </div>
   </div>
 
+  <!-- REPORT MODAL -->
+  <div class="modal-overlay" id="report-modal">
+    <div class="modal-box">
+      <div class="modal-title">🐛 コード報告</div>
+      <div class="modal-desc">下のテキストをコピーして Claude に貼り付けてください。どの部分が教則本と異なるかを一言添えると修正しやすくなります。</div>
+      <textarea class="report-textarea" id="report-text" readonly></textarea>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" onclick="closeReport()">閉じる</button>
+        <button class="btn btn-primary" id="copy-btn" onclick="copyReport()">📋 コピー</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 
@@ -975,7 +987,7 @@ const questions = [
     correctTexts: ["false:true:true:false:false:falseが出力される"],
     selectCount: 1,
     explanation: 'Stringオブジェクトについての問題です。文字列リテラルまたはintern()を実行したStringオブジェクトはインターン化されるため、以降同じ文字列の場合は同じオブジェクトを参照します。newキーワードでStringオブジェクトを生成した場合は、文字列が同じであっても新たなオブジェクトとなります。\n変数s1からs4の文字列は"Java"であり、このうちs2のみが別のStringオブジェクトです。変数s5は"java"、変数s6ではテキストブロックにより"java\\n"が代入されているため、equals()による文字列比較はfalseです。よって11-13行目の出力結果は選択肢Cとなります。'
-  },
+  },,
   {
     id: 2,
     text: `次のプログラムがあります。
@@ -1006,7 +1018,7 @@ const questions = [
     correctTexts: ["static int method(String... s) { return s.length;}"],
     selectCount: 1,
     explanation: 'メソッドの宣言と呼び出しについての問題です。各選択肢のアクセス修飾子は様々に指定されていますが、同一クラス内からのアクセスのため問題ありません。選択肢B、D、Eはインスタンスメソッドのためstaticであるmain()から呼び出すことはできません。選択肢Cはvoidのため戻り値が必要なprintln()内では使用できず、選択肢Fは引数リストが不一致のため呼び出すことはできません。'
-  },
+  },,
   {
     id: 3,
     text: '次の記述のうちコンパイルエラーが発生するものはどれですか。（3つ選択）',
@@ -1027,27 +1039,32 @@ const questions = [
     correctTexts: ["ArrayList<double> list = new ArrayList<>();", "List<String> list = new List<String>();", "ArrayList<Integer> list = Arrays.asList(\"1\", \"2\", \"3\");"],
     selectCount: 3,
     explanation: 'ジェネリクスの型指定についての問題です。コレクションでは基本データ型を扱わないため選択肢C（double）はエラーです。選択肢EはListはインタフェースのためインスタンス化できません。Arrays.asList()の戻り値はList型のためArrayList型には代入できない選択肢Hもエラーです。'
-  },
+  },,
   {
     id: 4,
-    text: `次のプログラムがあります（Main.javaとTest.java）。コンパイル、実行を行うとTestが出力されるものはどれですか。（2つ選択）
-なおコマンドはex4ディレクトリで実行し、OSにはCLASSPATH環境変数の指定がないものとします。
+    text: `次のプログラムがあります。
+
 
 <div class="code-block">
-  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> ex4/Main.java（package com.x）</div>
-  <pre><span class="kw">package</span> com.x;
-<span class="kw">import</span> com.y.Test;
-<span class="kw">public class</span> <span class="cls">Main</span> {
-    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) { Test.<span class="mth">print</span>(); }
-}</pre>
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> ex4¥Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">package</span> com.x;
+<span class="line-num">2</span><span class="kw">import</span> com.y.Test;
+<span class="line-num">3</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">4</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) { Test.<span class="mth">print</span>(); }
+<span class="line-num">5</span>}</pre>
 </div>
+
+
 <div class="code-block">
-  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> ex4/Test.java（package com.y）</div>
-  <pre><span class="kw">package</span> com.y;
-<span class="kw">public class</span> <span class="cls">Test</span> {
-    <span class="kw">public static void</span> <span class="mth">print</span>() { System.<span class="mth">out</span>.<span class="mth">println</span>(<span class="str">"Test"</span>); }
-}</pre>
-</div>`,
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> ex4¥Test.java</div>
+  <pre><span class="line-num">1</span><span class="kw">package</span> com.y;
+<span class="line-num">2</span><span class="kw">public class</span> <span class="cls">Test</span> {
+<span class="line-num">3</span>    <span class="kw">public static void</span> <span class="mth">print</span>() { System.<span class="mth">out</span>.<span class="mth">println</span>(<span class="str">"Test"</span>); }
+<span class="line-num">4</span>}</pre>
+</div>
+
+コンパイル、実行を行うとTestが出力されるものはどれですか。（2つ選択）
+なおコマンドはex4ディレクトリで実行し、OSにはCLASSPATH環境変数の指定がないものとします。`,
     options: ['A', 'B', 'C', 'D', 'E', 'F'],
     optionTexts: [
       '>javac -d . Main.java Test.java\n>java -classpath . com.x.Main',
@@ -1063,25 +1080,26 @@ const questions = [
     correctTexts: [">javac -d . Main.java Test.java\\n>java -classpath . com.x.Main", ">javac -d classes *.java\\n>java -cp classes com.x.Main"],
     selectCount: 2,
     explanation: 'コンパイルオプション-dはパッケージ宣言通りの階層にクラスファイルを生成します。選択肢Aはカレントディレクトリ配下、選択肢Dはclassesディレクトリ配下で適切にクラスファイルが生成され、実行時のクラスパスも正しく指定されています。選択肢Bは-dのディレクトリ指定がなく不完全。選択肢C、Eはコンパイルには成功しますが実行に失敗します。'
-  },
+  },,
   {
     id: 5,
     text: `次のプログラムのコンパイルが完了しています。
 
+
 <div class="code-block">
   <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
-  <pre><span class="kw">public class</span> <span class="cls">Main</span> {
-    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
-        <span class="mth">main</span>(<span class="kw">new</span> <span class="cls">Main</span>(), args);
-    }
-    <span class="kw">public static void</span> <span class="mth">main</span>(<span class="cls">Main</span> m, String[] a) {
-        System.<span class="mth">out</span>.<span class="mth">println</span>(m + <span class="str">", "</span> + a);
-    }
-}</pre>
+  <pre><span class="line-num">1</span><span class="kw">class</span> <span class="cls">Main</span> {
+<span class="line-num">2</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
+<span class="line-num">3</span>        <span class="mth">main</span>(<span class="kw">new</span> <span class="cls">Main</span>(), args);
+<span class="line-num">4</span>    }
+<span class="line-num">5</span>    <span class="kw">static void</span> <span class="mth">main</span>(<span class="cls">Main</span> m, String... s) {
+<span class="line-num">6</span>        System.<span class="mth">out</span>.<span class="mth">println</span>(m + <span class="str">", "</span> + s);
+<span class="line-num">7</span>    }
+<span class="line-num">8</span>}</pre>
 </div>
 
 以下の方法で実行するとどのような結果になりますか。（1つ選択）
-<code style="background:var(--surface2);padding:4px 8px;border-radius:4px;font-family:JetBrains Mono,monospace;font-size:13px;">  >java Main Java S E 17</code>`,
+<code style="background:var(--surface2);padding:4px 8px;border-radius:4px;font-family:JetBrains Mono,monospace;font-size:13px;">  &gt;java Main Java S E 17</code>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
     optionTexts: [
       'Main, [Java, S, E, 17]が出力される',
@@ -1098,12 +1116,39 @@ const questions = [
     correctTexts: ["Main@13221655, [Ljava.lang.String;@2f2c9b19が出力される"],
     selectCount: 1,
     explanation: '参照型の出力についての問題です。println()の引数に参照変数を指定すると、参照型の場合はクラスの完全修飾名、@、ハッシュコード値が16進数表記で出力されます。また配列の場合は1次元なら"["が1つ、Lの後にクラスの完全修飾名;と続き、@、ハッシュコード値が出力されます。コマンドライン引数を指定していますが、配列の要素を出力するプログラムではないため選択肢Dが正解です。'
-  },
+  },,
   {
     id: 6,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
 
-※コードはカスタム例外クラス3つ（FirstException、SubFirstException extends FirstException、SecondException extends RuntimeException）を持ち、execute(int)メソッドがswitch文で各例外をスロー。main()でtry-catch（指定順：SubFirstException→FirstException→Exception）を使用し、execute(5%2)を呼び出しています。`,
+
+<div class="code-block">
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">class</span> <span class="cls">FirstExeption</span> <span class="kw">extends</span> Exception {}
+<span class="line-num">2</span><span class="kw">class</span> <span class="cls">SubFirstException</span> <span class="kw">extends</span> <span class="cls">FirstExeption</span> {}
+<span class="line-num">3</span><span class="kw">class</span> <span class="cls">SecondException</span> <span class="kw">extends</span> RuntimeException {}
+<span class="line-num">4</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">5</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
+<span class="line-num">6</span>        <span class="kw">try</span> {
+<span class="line-num">7</span>            <span class="mth">execute</span>(<span class="num">5</span> % <span class="num">2</span>);
+<span class="line-num">8</span>        } <span class="kw">catch</span> (<span class="cls">SubFirstException</span> | <span class="cls">SecondException</span> e) {  <span class="cmt">// (A)</span>
+<span class="line-num">9</span>            System.<span class="mth">out</span>.<span class="mth">println</span>(<span class="str">"SubFirst | Second"</span>);
+<span class="line-num">10</span>        } <span class="kw">catch</span> (<span class="cls">FirstExeption</span> e) {  <span class="cmt">// (B)</span>
+<span class="line-num">11</span>            System.<span class="mth">out</span>.<span class="mth">println</span>(<span class="str">"First"</span>);
+<span class="line-num">12</span>        } <span class="kw">catch</span> (Exception e) {
+<span class="line-num">13</span>            System.<span class="mth">out</span>.<span class="mth">println</span>(<span class="str">"Ex"</span>);
+<span class="line-num">14</span>        }
+<span class="line-num">15</span>    }
+<span class="line-num">16</span>    <span class="kw">public static void</span> <span class="mth">execute</span>(<span class="kw">int</span> value) <span class="kw">throws</span> Exception {
+<span class="line-num">17</span>        <span class="kw">switch</span> (value) {
+<span class="line-num">18</span>            <span class="kw">case</span> <span class="num">1</span> -> <span class="kw">throw</span> <span class="kw">new</span> <span class="cls">FirstExeption</span>();
+<span class="line-num">19</span>            <span class="kw">case</span> <span class="num">2</span> -> <span class="kw">throw</span> <span class="kw">new</span> <span class="cls">SubFirstException</span>();
+<span class="line-num">20</span>            <span class="kw">case</span> <span class="num">3</span> -> <span class="kw">throw</span> <span class="kw">new</span> <span class="cls">SecondException</span>();
+<span class="line-num">21</span>            <span class="kw">default</span> -> <span class="kw">throw</span> <span class="kw">new</span> RuntimeException();  <span class="cmt">// (C)</span>
+<span class="line-num">22</span>        }
+<span class="line-num">23</span>    }
+<span class="line-num">24</span>}</pre>
+</div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F'],
     optionTexts: [
       'Aでコンパイルエラーが発生する',
@@ -1119,26 +1164,28 @@ const questions = [
     correctTexts: ["正常にコンパイル、実行でき、Firstが出力される"],
     selectCount: 1,
     explanation: '継承関係のある例外をキャッチするcatchブロックの指定順についての問題です。catchブロックの指定順は適切であり、コンパイルエラーは発生しません。execute()の引数として渡している5 % 2の結果は1のため、case 1の処理が実行され、呼び出し元にはFirstExceptionがスローされます。したがって、対応するcatchブロックからFirstが出力されます。'
-  },
+  },,
   {
     id: 7,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
 
+
 <div class="code-block">
   <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
-  <pre><span class="kw">public class</span> <span class="cls">Main</span> {
-    <span class="kw">static int</span> x = <span class="num">1</span>;
-    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
-        <span class="kw">int</span>[][] a = <span class="kw">new int</span>[<span class="num">2</span>][];
-        a[<span class="num">0</span>] = <span class="kw">new int</span>[<span class="num">1</span>];
-        a[<span class="num">1</span>] = <span class="kw">new int</span>[<span class="num">3</span>];
-        a[<span class="num">0</span>][<span class="num">0</span>] += ++x;
-        a[<span class="num">1</span>][<span class="num">1</span>] = a[<span class="num">0</span>].<span class="mth">length</span>;
-        a[<span class="num">1</span>][<span class="num">2</span>] = x++;
-        System.<span class="mth">out</span>.<span class="mth">println</span>(Arrays.<span class="mth">toString</span>(a[<span class="num">0</span>])
-                + <span class="str">":"</span> + Arrays.<span class="mth">toString</span>(a[<span class="num">1</span>]));
-    }
-}</pre>
+  <pre><span class="line-num">1</span><span class="kw">import</span> java.util.*;
+<span class="line-num">2</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">3</span>    <span class="kw">static int</span> x = <span class="num">1</span>;
+<span class="line-num">4</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
+<span class="line-num">5</span>        <span class="kw">int</span>[][] a = <span class="kw">new int</span>[<span class="num">2</span>][];  <span class="cmt">// (A)</span>
+<span class="line-num">6</span>        a[<span class="num">0</span>] = <span class="kw">new int</span>[<span class="num">1</span>];
+<span class="line-num">7</span>        a[<span class="num">1</span>] = <span class="kw">new int</span>[<span class="num">3</span>];
+<span class="line-num">8</span>        a[<span class="num">0</span>][<span class="num">0</span>] += ++x;  <span class="cmt">// (B)</span>
+<span class="line-num">9</span>        a[<span class="num">1</span>][<span class="num">1</span>] = a[<span class="num">0</span>].<span class="mth">length</span>;
+<span class="line-num">10</span>        a[<span class="num">1</span>][<span class="num">2</span>] = x++;
+<span class="line-num">11</span>        System.<span class="mth">out</span>.<span class="mth">println</span>(Arrays.<span class="mth">toString</span>(a[<span class="num">0</span>])
+<span class="line-num">12</span>                + <span class="str">":"</span> + Arrays.<span class="mth">toString</span>(a[<span class="num">1</span>]));  <span class="cmt">// (C)</span>
+<span class="line-num">13</span>    }
+<span class="line-num">14</span>}</pre>
 </div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
     optionTexts: [
@@ -1156,18 +1203,19 @@ const questions = [
     correctTexts: ["[2]:[0, 1, 2]が出力される"],
     selectCount: 1,
     explanation: '2次元配列と算術演算子についての問題です。a[0][0]：前置++によりxが2となった上で+=によりa[0][0]=2。a[1][0]：初期化で0。a[1][1]：a[0].length=1。a[1][2]：後置++のためxのインクリメント前の値2が代入。よってa[0]=[2]、a[1]=[0,1,2]が出力されます。'
-  },
+  },,
   {
     id: 8,
     text: `次のプログラムはTest.javaというファイルに記述されています。このプログラムを正しく説明しているものはどれですか。（1つ選択）
 
+
 <div class="code-block">
   <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Test.java</div>
-  <pre><span class="kw">public class</span> <span class="cls">A</span> {
-    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
-        System.<span class="mth">out</span>.<span class="mth">println</span>(<span class="num">3</span> | <span class="num">5</span>);
-    }
-}</pre>
+  <pre><span class="line-num">1</span><span class="kw">public class</span> <span class="cls">A</span> {
+<span class="line-num">2</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String... args) {
+<span class="line-num">3</span>        System.<span class="mth">out</span>.<span class="mth">println</span>(<span class="num">0b0100</span> | <span class="num">3</span>);
+<span class="line-num">4</span>    }
+<span class="line-num">5</span>}</pre>
 </div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
     optionTexts: [
@@ -1185,10 +1233,18 @@ const questions = [
     correctTexts: ["正しい説明はない"],
     selectCount: 1,
     explanation: 'プログラムの実行についての問題です。>java Test.javaはソースファイルモードでの実行であり、ソースファイル名とpublicクラス名が異なっていても実行可能なので選択肢Cの説明は誤り。javacコマンドを使う選択肢A、B、Dはクラス名をTestにするかpublic修飾子を削除する必要があります。選択肢E、Fは実行可能という点は正しいですが出力の説明が間違い（3|5=7が出力される）。よって正しい説明がないためGが正解。'
-  },
+  },,
   {
     id: 9,
-    text: `次のプログラムがあります（1行目：sealed class Base permits Derived）。
+    text: `次のプログラムがあります。
+
+
+<div class="code-block">
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">sealed class</span> <span class="cls">Base</span> {}
+<span class="line-num">2</span><span class="cmt">// insert code here</span></pre>
+</div>
+
 2行目に記述できるクラス宣言として正しいものはどれですか。（4つ選択）`,
     options: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'],
     optionTexts: [
@@ -1207,25 +1263,24 @@ const questions = [
     correctTexts: ["public class Derived {}", "final class Derived {}", "abstract class Derived{}", "non-sealed class Derived extends Base {}"],
     selectCount: 4,
     explanation: 'クラスに指定できる修飾子についての問題です。トップレベルのクラスに指定できるアクセス修飾子はpublicか省略のみで、privateとstaticは指定できません（選択肢B、Dは誤り）。abstractとfinalの両方指定は不可（選択肢F誤り）。sealed finalも不可（継承先がfinalのため矛盾：選択肢G誤り）。シールクラスのサブクラスにはnon-sealed、sealed、finalのいずれかを指定するため、選択肢Hは正しい記述です。'
-  },
+  },,
   {
     id: 10,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
 
+
 <div class="code-block">
   <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
-  <pre><span class="kw">class</span> <span class="cls">Item</span> {
-    <span class="kw">void</span> <span class="mth">Item</span>(String s) {}   <span class="cmt">// これはメソッド（voidあり）</span>
-    <span class="cls">Item</span>(String s) { name = s; }
-    String name;
-    <span class="ann">@Override</span> <span class="kw">public</span> String <span class="mth">toString</span>() { <span class="kw">return</span> <span class="str">"Item:"</span>+name; }
-}
-<span class="kw">public class</span> <span class="cls">Main</span> {
-    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
-        System.<span class="mth">out</span>.<span class="mth">println</span>(<span class="kw">new</span> <span class="cls">Item</span>());
-        System.<span class="mth">out</span>.<span class="mth">println</span>(<span class="kw">new</span> <span class="cls">Item</span>(<span class="str">"Coffee"</span>));
-    }
-}</pre>
+  <pre><span class="line-num">1</span><span class="kw">public class</span> <span class="cls">Item</span> {
+<span class="line-num">2</span>    <span class="kw">private</span> String name;
+<span class="line-num">3</span>    <span class="kw">void</span> <span class="mth">Item</span>() { name = <span class="str">"Something"</span>; }
+<span class="line-num">4</span>    <span class="kw">public</span> <span class="cls">Item</span>(String name) { name = name; }
+<span class="line-num">5</span>    <span class="kw">public</span> String <span class="mth">toString</span>() { <span class="kw">return</span> <span class="str">" Item:"</span> + name; }
+<span class="line-num">6</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String...args) {
+<span class="line-num">7</span>        System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="kw">new</span> <span class="cls">Item</span>());
+<span class="line-num">8</span>        System.<span class="mth">out</span>.<span class="mth">println</span>(<span class="kw">new</span> <span class="cls">Item</span>(<span class="str">"Coffee"</span>));
+<span class="line-num">9</span>    }
+<span class="line-num">10</span>}</pre>
 </div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F'],
     optionTexts: [
@@ -1242,7 +1297,7 @@ const questions = [
     correctTexts: ["コンパイルエラーが発生する"],
     selectCount: 1,
     explanation: 'コンストラクタについての問題です。ItemクラスにはStringを1つ受け取るコンストラクタのみが宣言されているため、new Item()によるオブジェクトの生成はできず、13行目でコンパイルエラーとなります。3-5行目はvoidがあるためコンストラクタではなくメソッドです。'
-  },
+  },,
   {
     id: 11,
     text: '次の記述のうちコンパイルが成功するものはどれですか。（3つ選択）',
@@ -1261,24 +1316,23 @@ const questions = [
     correctTexts: ["A", "1", "2"],
     selectCount: 3,
     explanation: '2次元配列とデータ型についての問題です。選択肢Aはchar型リテラルが暗黙変換でint型に変換されるためOK。選択肢EはObject[][]でf[0]は要素数0、f[1]はStringとIntegerがObject型で扱われ正しい。選択肢Bはboolean型変数にBoolean[][]は代入不可。選択肢Cは要素数と初期値の両方指定は不可。選択肢DはMath.round()の戻り値はlong型のためDouble[][]には代入不可。'
-  },
+  },,
   {
     id: 12,
-    text: `次のプログラムに2行目の記述（public static void main(String... args)）がある場合に残りのコードを正しく説明しているものはどれですか。（1つ選択）
+    text: `次のプログラムに2行目の記述がある場合に残りのコードを正しく説明しているものはどれですか。（1つ選択）
+
 
 <div class="code-block">
-  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java（抜粋）</div>
-  <pre><span class="kw">public class</span> <span class="cls">Main</span> {
-    <span class="kw">public static void</span> <span class="mth">main</span>(String... args) { <span class="cmt">// 2行目</span>
-        System.<span class="mth">out</span>.<span class="mth">println</span>(<span class="str">"called"</span>);
-    }
-    <span class="cmt">// A: Main()</span>
-    <span class="cmt">// B: static void main(String[] a)</span>
-    <span class="cmt">// C: void main(String s, int n)</span>
-    <span class="cmt">// D: public static void main(String... a)</span>
-    <span class="cmt">// E: static void main(String a...)</span>
-    <span class="cmt">// F: static void main(int... n)</span>
-}</pre>
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">2</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {}
+<span class="line-num">3</span>    <span class="kw">public</span> <span class="cls">Main</span>(String... args) {}  <span class="cmt">// (A)</span>
+<span class="line-num">4</span>    <span class="kw">public void</span> <span class="mth">main</span>(String arg) {}  <span class="cmt">// (B)</span>
+<span class="line-num">5</span>    <span class="kw">static void</span> <span class="cls">Main</span>(String[] args) {}  <span class="cmt">// (C)</span>
+<span class="line-num">6</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String... var) {}  <span class="cmt">// (D)</span>
+<span class="line-num">7</span>    <span class="kw">public void</span> <span class="mth">main</span>() {}  <span class="cmt">// (E)</span>
+<span class="line-num">8</span>    <span class="kw">public static void</span> <span class="mth">main</span>(<span class="kw">int</span>[] args) {}  <span class="cmt">// (F)</span>
+<span class="line-num">9</span>}</pre>
 </div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F'],
     optionTexts: [
@@ -1295,7 +1349,7 @@ const questions = [
     correctTexts: ["Dは2行目のメソッドと宣言が重複するためコンパイルエラーが発生する"],
     selectCount: 1,
     explanation: 'メソッドについての問題です。2行目にはJavaアプリケーションの実行時に呼ばれるmain()をすでに宣言しており、Dは同じシグネチャのメソッドを宣言するためコンパイルエラーになります。Aはコンストラクタです。main()の引数は可変長でも記述でき、変数名はargs以外も可能です。'
-  },
+  },,
   {
     id: 13,
     text: '次の記述のうちコンパイルエラーが発生するものはどれですか。（2つ選択）',
@@ -1314,25 +1368,25 @@ const questions = [
     correctTexts: ["Record record(String name) {}", "record Product(double price) extends Record {}"],
     selectCount: 2,
     explanation: 'レコードクラスの宣言についての問題です。選択肢Bはレコードの宣言にrecord（小文字）でなくRecord（大文字）を使用しているためエラー。選択肢Eはレコードクラスは暗黙的にjava.lang.Recordを継承するため明示的にextends Recordを記述することはできません。選択肢A（コンポーネントなし）、C（コンポーネント名にrecordを使用）、D、F（finalの明示指定）はすべて適切な宣言です。'
-  },
+  },,
   {
     id: 14,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
 
+
 <div class="code-block">
   <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
-  <pre><span class="kw">public class</span> <span class="cls">Main</span> {
-    <span class="kw">protected static void</span> <span class="mth">main</span>(String[] args) {}  <span class="cmt">// 2行目</span>
-    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {  <span class="cmt">// 8行目</span>
-        <span class="kw">final var</span> FLAG = <span class="kw">true</span>;
-        <span class="kw">final int</span> VALUE;       <span class="cmt">// 未初期化 (4行目)</span>
-        <span class="kw">if</span> (FLAG) VALUE = <span class="num">100</span>; <span class="cmt">// 条件がtrueのときのみ初期化</span>
-        System.<span class="mth">out</span>.<span class="mth">println</span>(<span class="cls">Main</span>.class);<span class="cmt">// A</span>
-        System.<span class="mth">out</span>.<span class="mth">println</span>(FLAG);    <span class="cmt">// B</span>
-        System.<span class="mth">out</span>.<span class="mth">println</span>(FLAG ? <span class="str">"T"</span>:<span class="str">"F"</span>);<span class="cmt">// C</span>
-        System.<span class="mth">out</span>.<span class="mth">println</span>(VALUE);   <span class="cmt">// D</span>
-    }
-}</pre>
+  <pre><span class="line-num">1</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">2</span>    <span class="kw">protected void</span> <span class="mth">main</span>(<span class="kw">int</span> a) {  <span class="cmt">// (A)</span>
+<span class="line-num">3</span>        <span class="kw">final var</span> FLAG = <span class="kw">true</span>;
+<span class="line-num">4</span>        <span class="kw">final int</span> VALUE;  <span class="cmt">// (B)</span>
+<span class="line-num">5</span>        <span class="kw">if</span> (!FLAG) VALUE = <span class="num">100</span>;  <span class="cmt">// (C)</span>
+<span class="line-num">6</span>        System.<span class="mth">out</span>.<span class="mth">println</span>(VALUE);  <span class="cmt">// (D)</span>
+<span class="line-num">7</span>    }
+<span class="line-num">8</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
+<span class="line-num">9</span>        <span class="kw">new</span> <span class="cls">Main</span>().<span class="mth">main</span>(<span class="num">100</span>);
+<span class="line-num">10</span>    }
+<span class="line-num">11</span>}</pre>
 </div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F'],
     optionTexts: [
@@ -1349,21 +1403,31 @@ const questions = [
     correctTexts: ["Dでコンパイルエラーが発生する"],
     selectCount: 1,
     explanation: 'ローカル変数の初期化と定数についての問題です。varで宣言したFLAGは初期化済みです。4行目のVALUEはif文のtrueの処理として初期化していますが、条件式がfalseの場合は初期化されないため、VALUEにアクセスするDでコンパイルエラーとなります。'
-  },
+  },,
   {
     id: 15,
-    text: `次のプログラム（抜粋）があります。要素として4つのStringオブジェクトを持つリストをループしintに変換する処理で、必ずArrayIndexOutOfBoundsExceptionとNumberFormatExceptionがスローされます。
+    text: `次のプログラム（抜粋）があります。
 
-例外がスローされることなくプログラムを終了するために（1）に記述するものはどれですか。（2つ選択）
 
 <div class="code-block">
-  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> 抜粋</div>
-  <pre><span class="kw">try</span> {
-    <span class="cmt">// ループ処理...</span>
-} <span class="kw">catch</span> (/* (1) */) {
-    <span class="cmt">// 例外処理</span>
-}</pre>
-</div>`,
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">2</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
+<span class="line-num">3</span>        List&lt;String&gt; list = List.<span class="mth">of</span>(<span class="str">"Java"</span>, <span class="str">"8"</span>, <span class="str">"11"</span>, <span class="str">"17"</span>);
+<span class="line-num">4</span>        <span class="kw">for</span> (<span class="kw">var</span> i = <span class="num">0</span>; i &lt;= list.<span class="mth">size</span>(); i++) {
+<span class="line-num">5</span>            <span class="kw">try</span> {
+<span class="line-num">6</span>                Integer.<span class="mth">parseInt</span>(list.<span class="mth">get</span>(i));
+<span class="line-num">7</span>            } <span class="kw">catch</span> ( [ &nbsp;&nbsp;(<span class="num">1</span>)&nbsp;&nbsp; ] ) {
+<span class="line-num">8</span>                System.<span class="mth">out</span>.<span class="mth">print</span>(e.<span class="mth">getMessage</span>());
+<span class="line-num">9</span>            } <span class="kw">finally</span> {
+<span class="line-num">10</span>                System.<span class="mth">out</span>.<span class="mth">println</span>(<span class="str">" loop "</span> + i + <span class="str">" has finished."</span>);
+<span class="line-num">11</span>            }
+<span class="line-num">12</span>        }
+<span class="line-num">13</span>    }
+<span class="line-num">14</span>}</pre>
+</div>
+
+例外がスローされることなくプログラムを終了するために（1）に記述するものはどれですか。（2つ選択）`,
     options: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
     optionTexts: [
       'NumberFormatException | RuntimeException e',
@@ -1380,25 +1444,27 @@ const questions = [
     correctTexts: ["NumberFormatException | ArrayIndexOutOfBoundsException e", "Exception e"],
     selectCount: 2,
     explanation: 'multi-catchについての問題です。選択肢Bは構文間違い（参照変数eは最後に1回だけ記述）。選択肢Aはmulti-catchで継承関係のあるクラスを記述することはできないため誤り（RuntimeExceptionはNumberFormatExceptionの親クラス）。選択肢C（NumberFormatException | ArrayIndexOutOfBoundsException e）は適切な指定。選択肢E、Fは一方の例外のみ処理で不十分。選択肢Gはすべての例外のスーパークラスExceptionでキャッチする正しい指定。'
-  },
+  },,
   {
     id: 16,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
 
+
 <div class="code-block">
   <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
-  <pre><span class="kw">public class</span> <span class="cls">Main</span> {
-    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
-        <span class="kw">new</span> <span class="cls">Main</span>().<span class="mth">method</span>(); <span class="cmt">// ← 実際は new Main().method() が必要</span>
-        Main.<span class="mth">method</span>();      <span class="cmt">// ← ここでエラー</span>
-    }
-    <span class="kw">void</span> <span class="mth">method</span>() {
-        String x = <span class="str">"Java SE 17"</span>;
-        StringBuilder y = <span class="kw">new</span> <span class="cls">StringBuilder</span>(<span class="str">"Java SE 17"</span>);
-        <span class="kw">int</span> i = x.<span class="mth">indexOf</span>(<span class="str">"SE"</span>) > <span class="num">0</span> ? <span class="num">2</span> : <span class="num">0</span>;
-        System.<span class="mth">out</span>.<span class="mth">println</span>(i);
-    }
-}</pre>
+  <pre><span class="line-num">1</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">2</span>    <span class="kw">void</span> <span class="mth">method</span>() {
+<span class="line-num">3</span>        <span class="kw">var</span> x = <span class="str">"Java SE 17"</span>;
+<span class="line-num">4</span>        <span class="kw">var</span> y = <span class="kw">new</span> <span class="cls">StringBuilder</span>(<span class="str">"Java"</span>).<span class="mth">append</span>(<span class="str">"17"</span>);
+<span class="line-num">5</span>        <span class="kw">var</span> v = x.<span class="mth">substring</span>(<span class="num">8</span>);
+<span class="line-num">6</span>        <span class="kw">var</span> z = y.<span class="mth">substring</span>(<span class="num">4</span>, <span class="num">6</span>);
+<span class="line-num">7</span>        <span class="kw">int</span> i = x.<span class="mth">equals</span>(y) ? <span class="num">1</span> : v.<span class="mth">equals</span>(z) ? <span class="num">2</span> : <span class="num">0</span>;
+<span class="line-num">8</span>        System.<span class="mth">out</span>.<span class="mth">println</span>(i);
+<span class="line-num">9</span>    }
+<span class="line-num">10</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
+<span class="line-num">11</span>        <span class="kw">this</span>.<span class="mth">method</span>();
+<span class="line-num">12</span>    }
+<span class="line-num">13</span>}</pre>
 </div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
     optionTexts: [
@@ -1416,16 +1482,16 @@ const questions = [
     correctTexts: ["method()の呼び出し方法が適切でないためコンパイルエラーが発生する"],
     selectCount: 1,
     explanation: 'staticメソッドのmain()からインスタンスメソッドのmethod()を呼び出すことはできません。またthis.はインスタンスメンバを指し示すキーワードのためstaticメソッド内では使用することはありません。Main.method()のようにクラス名でインスタンスメソッドを呼び出すことはできず、コンパイルエラーとなります。'
-  },
+  },,
   {
     id: 17,
     text: `次のプログラム（抜粋）があります。
 
+
 <div class="code-block">
-  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> 抜粋</div>
-  <pre><span class="kw">char</span>[] vowels = {<span class="str">'a'</span>,<span class="str">'e'</span>,<span class="str">'i'</span>,<span class="str">'o'</span>,<span class="str">'u'</span>};
-<span class="cmt">// 4行目</span>
-<span class="kw">for</span> (<span class="kw">char</span> c : vowels) System.<span class="mth">out</span>.<span class="mth">print</span>(c); <span class="cmt">// aeiou を出力</span></pre>
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">char</span>[] vowels = {<span class="str">'a'</span>,<span class="str">'e'</span>,<span class="str">'i'</span>,<span class="str">'o'</span>,<span class="str">'u'</span>};
+<span class="line-num">2</span><span class="kw">for</span> (<span class="kw">char</span> c : vowels) System.<span class="mth">out</span>.<span class="mth">print</span>(c);  <span class="cmt">// aeiouを出力</span></pre>
 </div>
 
 4行目の処理と同じ結果になるものはどれですか。（2つ選択）`,
@@ -1443,23 +1509,25 @@ const questions = [
     correctTexts: ["int i; for (i = 0; i < vowels.length;) { System.out.print(vowels[i]); i++; }", "for (var v = 0; v < vowels.length; v++) System.out.print(vowels[v]);"],
     selectCount: 2,
     explanation: 'for文の指定についての問題です。選択肢Cはfor文に入る前にカウンタ変数の宣言を行い、初期化をfor文内で行っています。選択肢Eではvarを使用しています。どちらも適切で設問のfor文と同じ出力となります。選択肢Aは条件式が<=のためArrayIndexOutOfBoundsExceptionがスローされます。選択肢Dは1度のループでカウンタ変数が2ずつ増え条件式もないためエラー。選択肢Bはカウンタ変数が1から始まるためeiouのみ出力されます。'
-  },
+  },,
   {
     id: 18,
     text: `次のプログラムがあります。
 
+
 <div class="code-block">
   <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
-  <pre><span class="kw">class</span> <span class="cls">Book</span> {
-    <span class="kw">private static final int</span> id = <span class="num">1</span>;
-    String title = <span class="str">"Java Silver"</span>;
-}
-<span class="kw">public class</span> <span class="cls">Main</span> {
-    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
-        Book book = <span class="kw">new</span> <span class="cls">Book</span>();
-        System.<span class="mth">out</span>.<span class="mth">println</span>(/* (1) */);  <span class="cmt">// 何らかの出力</span>
-    }
-}</pre>
+  <pre><span class="line-num">1</span><span class="kw">public class</span> <span class="cls">Book</span> {
+<span class="line-num">2</span>    <span class="kw">private static final int</span> id = <span class="num">17</span>;
+<span class="line-num">3</span>    String title;
+<span class="line-num">4</span>    { title = <span class="str">"Java Silver"</span>; }
+<span class="line-num">5</span>}
+<span class="line-num">6</span><span class="kw">class</span> <span class="cls">Main</span> {
+<span class="line-num">7</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String... args) {
+<span class="line-num">8</span>        <span class="cls">Book</span> book = <span class="kw">new</span> <span class="cls">Book</span>();
+<span class="line-num">9</span>        System.<span class="mth">out</span>.<span class="mth">println</span>( [ &nbsp;&nbsp;(<span class="num">1</span>)&nbsp;&nbsp; ] );
+<span class="line-num">10</span>    }
+<span class="line-num">11</span>}</pre>
 </div>
 
 何らかの出力を行うために（1）に記述できるものはどれですか。（1つ選択）`,
@@ -1479,21 +1547,28 @@ const questions = [
     correctTexts: ["book.title"],
     selectCount: 1,
     explanation: 'オブジェクトのメンバアクセスについての問題です。Bookクラスのidはprivate static finalのため、privateが指定されているのでMainクラスからアクセスすることはできません（A、Cは誤り）。titleのアクセス修飾子は省略されているためMainクラスからアクセス可能で、book.titleと記述することで"Java Silver"が出力されます。this.は同クラス内でのみ使用可能で、Mainクラスでは使用できません。'
-  },
+  },,
   {
     id: 19,
     text: `次のプログラム（抜粋）があります。
 
+
 <div class="code-block">
-  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> 抜粋（switch文）</div>
-  <pre><span class="kw">char</span> c = <span class="str">'a'</span>;
-String text = <span class="str">""</span>;
-<span class="kw">switch</span> (c) {
-    <span class="kw">case</span> <span class="num">97</span>, <span class="num">98</span>: text = <span class="str">"a | b | "</span>; <span class="kw">break</span>;
-    <span class="kw">case</span> <span class="num">99</span>, <span class="num">100</span>: text = <span class="str">"c | d | "</span>; <span class="kw">break</span>;
-    <span class="kw">case</span> <span class="num">101</span>: text = <span class="str">"e | "</span>; <span class="kw">break</span>;
-    <span class="kw">default</span>: text = <span class="str">"the others"</span>;
-}</pre>
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span>    <span class="kw">int</span> c = <span class="str">'c'</span>;
+<span class="line-num">2</span>    String text = <span class="str">""</span>;
+<span class="line-num">3</span>    <span class="kw">switch</span> (c) {
+<span class="line-num">4</span>        <span class="kw">case</span> <span class="num">97</span>:
+<span class="line-num">5</span>        <span class="kw">case</span> <span class="num">98</span>:
+<span class="line-num">6</span>            text = <span class="str">"a | b | "</span>; <span class="kw">break</span>;
+<span class="line-num">7</span>        <span class="kw">case</span> <span class="num">99</span>:
+<span class="line-num">8</span>        <span class="kw">case</span> <span class="num">100</span>:
+<span class="line-num">9</span>            text = <span class="str">"c | d | "</span>; <span class="kw">break</span>;
+<span class="line-num">10</span>        <span class="kw">case</span> <span class="num">101</span>:
+<span class="line-num">11</span>            text = <span class="str">"e | "</span>; <span class="kw">break</span>;
+<span class="line-num">12</span>        <span class="kw">default</span>:
+<span class="line-num">13</span>            text = <span class="str">"the others"</span>;
+<span class="line-num">14</span>    }</pre>
 </div>
 
 4行目以降の処理と同じ結果になるものはどれですか。（2つ選択）`,
@@ -1511,21 +1586,22 @@ String text = <span class="str">""</span>;
     correctTexts: ["String text = switch (c) {\\n  case 97, 98 -> \"a | b | \";\\n  case 99, 100 -> \"c | d | \";\\n  case 101 -> \"e | \";\\n  default -> \"the others\";\\n};", "String text = switch (c) {\\n  case 97, 98: yield \"a | b | \";\\n  case 99, 100: yield \"c | d | \";\\n  case 101: yield \"e | \";\\n  default: yield \"the others\";\\n};"],
     selectCount: 2,
     explanation: 'switch文とswitch式についての問題です。switch式では":"とyieldの組み合わせか"->"を使用して値を返します。またdefaultは省略できません。選択肢Aはcaseの記述が不要で構文間違い（caseキーワードを重ねてはいけない）。選択肢Cはdefaultの処理がないためコンパイルエラー。選択肢Eは1つのswitch内で":"と"->"の両方を使用することはできないためコンパイルエラー。'
-  },
+  },,
   {
     id: 20,
     text: `次のプログラムを正しく説明しているものはどれですか。（1つ選択）
 
+
 <div class="code-block">
   <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
-  <pre><span class="kw">public class</span> <span class="cls">Main</span> {
-    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
-        <span class="kw">int</span> i;
-        <span class="kw">for</span> (i = <span class="num">5</span>; i > -<span class="num">5</span>; i -= <span class="num">2</span>) {
-            System.<span class="mth">out</span>.<span class="mth">print</span>(i);
-        }
-    }
-}</pre>
+  <pre><span class="line-num">1</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">2</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
+<span class="line-num">3</span>        <span class="kw">int</span> i;
+<span class="line-num">4</span>        <span class="kw">for</span> (i = <span class="num">5</span>; i &gt; -<span class="num">5</span> ; i -= <span class="num">2</span>) {
+<span class="line-num">5</span>            System.<span class="mth">out</span>.<span class="mth">print</span>(i);
+<span class="line-num">6</span>        }
+<span class="line-num">7</span>    }
+<span class="line-num">8</span>}</pre>
 </div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
     optionTexts: [
@@ -1543,12 +1619,37 @@ String text = <span class="str">""</span>;
     correctTexts: ["正常にコンパイル、実行でき、531-1-3が出力される"],
     selectCount: 1,
     explanation: 'for文のカウンタ変数や条件式についての問題です。カウンタ変数をfor文に入る前に宣言することも可能です。また条件式にマイナス値は使用可能であり、カウンタ変数の更新も問題ないため正常に実行できます。5から-5より大きい間、カウンタ変数の値を2ずつ減らしながら出力を行うため、5,3,1,-1,-3が出力されます。'
-  },
+  },,
   {
     id: 21,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
 
-TopクラスとBottomクラスは継承関係で、メンバ変数value（Top:10,Bottom:90）、staticメソッドshowInfo()、インスタンスメソッドprint()（Top:"top"、Bottom:"bottom"）があります。main()でTop型配列に両オブジェクトを格納し、for文でアクセスします。`,
+
+<div class="code-block">
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">2</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String... args) {
+<span class="line-num">3</span>        Top[] array = { <span class="kw">new</span> <span class="cls">Top</span>(), <span class="kw">new</span> <span class="cls">Bottom</span>()};
+<span class="line-num">4</span>        <span class="kw">for</span> (Top t: array) {
+<span class="line-num">5</span>            t.<span class="mth">showInfo</span>();
+<span class="line-num">6</span>            t.<span class="mth">print</span>();
+<span class="line-num">7</span>            System.<span class="mth">out</span>.<span class="mth">print</span>(t.value + <span class="str">": "</span>);
+<span class="line-num">8</span>        }
+<span class="line-num">9</span>    }
+<span class="line-num">10</span>}
+<span class="line-num">11</span><span class="kw">class</span> <span class="cls">Top</span> {
+<span class="line-num">12</span>    <span class="kw">int</span> value = <span class="num">10</span>;
+<span class="line-num">13</span>    String name = <span class="str">" top "</span>;
+<span class="line-num">14</span>    <span class="kw">static void</span> <span class="mth">showInfo</span>() { System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"T"</span>); }
+<span class="line-num">15</span>    <span class="kw">void</span> <span class="mth">print</span>() { System.<span class="mth">out</span>.<span class="mth">print</span>(name); }
+<span class="line-num">16</span>}
+<span class="line-num">17</span><span class="kw">class</span> <span class="cls">Bottom</span> <span class="kw">extends</span> <span class="cls">Top</span> {
+<span class="line-num">18</span>    <span class="kw">int</span> value = <span class="num">90</span>;
+<span class="line-num">19</span>    String name = <span class="str">" bottom "</span>;
+<span class="line-num">20</span>    <span class="kw">static void</span> <span class="mth">showInfo</span>() { System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"B"</span>); }
+<span class="line-num">21</span>    <span class="kw">void</span> <span class="mth">print</span>() { System.<span class="mth">out</span>.<span class="mth">print</span>(name); }
+<span class="line-num">22</span>}</pre>
+</div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
     optionTexts: [
       'T top 10: B bottom 90: が出力される',
@@ -1565,21 +1666,21 @@ TopクラスとBottomクラスは継承関係で、メンバ変数value（Top:10
     correctTexts: ["T top 10: T bottom 10: が出力される"],
     selectCount: 1,
     explanation: '継承関係がある場合のメンバアクセスについての問題です。Top型の変数でアクセスすると、staticメソッドとメンバ変数はTop型のメンバにアクセスします（それぞれT、10が固定）。一方インスタンスメソッドprint()のみ、参照しているオブジェクトのメソッドが実行されます（top、bottom）。よってT top 10: T bottom 10: が出力される選択肢Bが正解です。'
-  },
+  },,
   {
     id: 22,
     text: `次のプログラム（抜粋）の9行目までの処理が完了したタイミングで、ガベージコレクタの対象となるオブジェクトはいくつありますか。（1つ選択）
 
+
 <div class="code-block">
-  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> 抜粋</div>
-  <pre><span class="cls">Item</span> i1 = <span class="kw">new</span> <span class="cls">Item</span>(<span class="num">1</span>);  <span class="cmt">// obj1</span>
-<span class="cls">Item</span> i2 = <span class="kw">new</span> <span class="cls">Item</span>(<span class="num">2</span>);  <span class="cmt">// obj2</span>
-<span class="cls">Item</span> i3 = <span class="kw">new</span> <span class="cls">Item</span>(<span class="num">3</span>);  <span class="cmt">// obj3</span>
-<span class="cls">Item</span> i4 = i1;           <span class="cmt">// i4→obj1</span>
-i1 = <span class="kw">null</span>;              <span class="cmt">// i1がobj1を離す</span>
-i2 = <span class="kw">new</span> <span class="cls">Item</span>(<span class="num">4</span>);      <span class="cmt">// obj4、i2がobj2を離す</span>
-i4 = i2;               <span class="cmt">// i4がobj1を離す→obj1が孤立</span>
-<span class="cmt">// 9行目まで完了</span></pre>
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java（抜粋）</div>
+  <pre><span class="line-num">1</span>    <span class="cls">Item</span> i1 = <span class="kw">new</span> <span class="cls">Item</span>();
+<span class="line-num">2</span>    <span class="cls">Item</span> i2 = <span class="kw">new</span> <span class="cls">Item</span>();
+<span class="line-num">3</span>    <span class="cls">Item</span> i3 = <span class="kw">new</span> <span class="cls">Item</span>();
+<span class="line-num">4</span>    <span class="cls">Item</span> i4 = i1;
+<span class="line-num">5</span>    i1 = <span class="kw">null</span>;
+<span class="line-num">6</span>    i2 = <span class="kw">new</span> <span class="cls">Item</span>();
+<span class="line-num">7</span>    i4 = i3;</pre>
 </div>`,
     options: ['A', 'B', 'C', 'D', 'E'],
     optionTexts: ['0', '1', '2', '3', '4'],
@@ -1589,19 +1690,24 @@ i4 = i2;               <span class="cmt">// i4がobj1を離す→obj1が孤立</
     correctTexts: ["2"],
     selectCount: 1,
     explanation: 'オブジェクトのライフサイクルについての問題です。オブジェクトは全部で4つ生成されています。最初のobj1は変数i1とi4から参照されますが、i1にnullが代入され、その後i4の参照も別のオブジェクト（obj4）に切り替わるため、どこからも参照されなくなりGCの対象です。またobj2はi2の参照が切り替わり孤立します。よってガベージコレクタの対象は2つです。'
-  },
+  },,
   {
     id: 23,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
 
+
 <div class="code-block">
-  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java（do-whileループ）</div>
-  <pre><span class="kw">int</span> i = <span class="num">2</span>;
-<span class="kw">do</span> {
-    i++;
-    <span class="kw">if</span> (i % <span class="num">2</span> == <span class="num">0</span>) <span class="kw">continue</span>;
-    System.<span class="mth">out</span>.<span class="mth">println</span>(++i);
-} <span class="kw">while</span> (i++ < <span class="num">10</span>);</pre>
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">2</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
+<span class="line-num">3</span>        <span class="kw">int</span> i = <span class="num">2</span>;
+<span class="line-num">4</span>        <span class="kw">do</span> {
+<span class="line-num">5</span>            i++;
+<span class="line-num">6</span>            <span class="kw">if</span>(i % <span class="num">2</span> == <span class="num">0</span>) <span class="kw">continue</span>;
+<span class="line-num">7</span>            System.<span class="mth">out</span>.<span class="mth">print</span>(++i);
+<span class="line-num">8</span>        }<span class="kw">while</span>(i++ &lt; <span class="num">10</span>);
+<span class="line-num">9</span>    }
+<span class="line-num">10</span>}</pre>
 </div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F'],
     optionTexts: [
@@ -1618,20 +1724,25 @@ i4 = i2;               <span class="cmt">// i4がobj1を離す→obj1が孤立</
     correctTexts: ["4が出力される"],
     selectCount: 1,
     explanation: 'do-while文についての問題です。最初のdoの処理ではiの値が3となり、if文の条件式はfalseとなるため、continueは実行されません。7行目の出力処理ではprintln(++i)と前置のインクリメントがあるため、最初にiの値が4になり、次に出力の処理が行われるため4が出力されます。8行目のwhileの条件式はi++と後置のため、i < 10が評価されてからiの値が5となります。2回目のdoの処理ではiが6になるためif文がtrueとなりcontinueが実行されます。以降iの値は必ず偶数となりif文も常にtrueとなるため出力処理はスキップされ続け、i < 10でなくなるとdo-while文を抜けます。'
-  },
+  },,
   {
     id: 24,
     text: `次のプログラム（抜粋）をコンパイル、実行するとどのような結果になりますか。（1つ選択）
 
+
 <div class="code-block">
-  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> 抜粋（リストとfor文）</div>
-  <pre><span class="cls">List</span>&lt;String&gt; list = <span class="cls">List</span>.<span class="mth">of</span>(<span class="str">"A"</span>,<span class="str">"B"</span>,<span class="str">"C"</span>,<span class="str">"D"</span>,<span class="str">"E"</span>,<span class="str">"F"</span>,<span class="str">"G"</span>,<span class="str">"H"</span>);
-<span class="kw">for</span> (<span class="kw">int</span> index = <span class="num">0</span>; index &lt; list.<span class="mth">size</span>(); index++) {
-    System.<span class="mth">out</span>.<span class="mth">print</span>(list.<span class="mth">get</span>(index));
-    <span class="kw">if</span> (index &gt; <span class="num">2</span>) {
-        <span class="kw">if</span> (index % <span class="num">2</span> == <span class="num">1</span>) index++;
-    }
-}</pre>
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">2</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
+<span class="line-num">3</span>        List list = List.<span class="mth">of</span>(<span class="str">"A"</span>, <span class="str">"B"</span>, <span class="str">"C"</span>, <span class="str">"D"</span>, <span class="str">"E"</span>, <span class="str">"F"</span>, <span class="str">"G"</span>, <span class="str">"H"</span>);
+<span class="line-num">4</span>        <span class="kw">for</span> (<span class="kw">int</span> index = <span class="num">0</span>; index &lt; list.<span class="mth">size</span>(); index++) {
+<span class="line-num">5</span>            System.<span class="mth">out</span>.<span class="mth">print</span>(list.<span class="mth">get</span>(index));
+<span class="line-num">6</span>            <span class="kw">if</span>(index &gt; <span class="num">2</span>) {
+<span class="line-num">7</span>                <span class="kw">if</span>( index % <span class="num">2</span> == <span class="num">1</span>)  index++;
+<span class="line-num">8</span>            }
+<span class="line-num">9</span>        }
+<span class="line-num">10</span>    }
+<span class="line-num">11</span>}</pre>
 </div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
     optionTexts: [
@@ -1649,10 +1760,28 @@ i4 = i2;               <span class="cmt">// i4がobj1を離す→obj1が孤立</
     correctTexts: ["ABCDFHが出力される"],
     selectCount: 1,
     explanation: 'リストの使用と制御文の組み合わせについての問題です。indexが3以降の奇数の場合は、内側のif文のインクリメントとループのインクリメントにより値が2ずつ増えます。この結果0,1,2,3,5,7番目の要素（A,B,C,D,F,H）が出力されます。'
-  },
+  },,
   {
     id: 25,
-    text: `次のプログラムがあります（MyClassクラス：static変数a=100.0とgetA()、インスタンス変数bとgetB()）。
+    text: `次のプログラムがあります。
+
+
+<div class="code-block">
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">2</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String... args) {
+<span class="line-num">3</span>        System.<span class="mth">out</span>.<span class="mth">println</span>( [ &nbsp;&nbsp;(<span class="num">1</span>)&nbsp;&nbsp; ] );
+<span class="line-num">4</span>    }
+<span class="line-num">5</span>}
+<span class="line-num">6</span><span class="kw">class</span> <span class="cls">MyClass</span> {
+<span class="line-num">7</span>    <span class="kw">static double</span> a;
+<span class="line-num">8</span>    <span class="kw">private int</span> b;
+<span class="line-num">9</span>    <span class="kw">static</span> { a = <span class="num">100.0</span>; }
+<span class="line-num">10</span>    <span class="kw">private static double</span> <span class="mth">getA</span>() { <span class="kw">return</span> a; }
+<span class="line-num">11</span>    <span class="kw">int</span> <span class="mth">getB</span>() { <span class="kw">return</span> b; }
+<span class="line-num">12</span>    <span class="kw">public</span> String <span class="mth">toString</span>() { <span class="kw">return</span> <span class="str">"MyClass:"</span> + a + <span class="str">","</span> + b; }
+<span class="line-num">13</span>}</pre>
+</div>
 
 <code style="background:var(--surface2);padding:4px 8px;border-radius:4px;font-family:JetBrains Mono,monospace;font-size:13px;">100.0:0</code> と出力するために（1）に記述できるものはどれですか。（2つ選択）`,
     options: ['A', 'B', 'C', 'D', 'E', 'F'],
@@ -1670,12 +1799,41 @@ i4 = i2;               <span class="cmt">// i4がobj1を離す→obj1が孤立</
     correctTexts: ["MyClass.a + \":\" + new MyClass().getB()", "new MyClass().a + \":\" + new MyClass().getB()"],
     selectCount: 2,
     explanation: 'staticとインスタンスについての問題です。変数aはstaticなのでMyClass.aでアクセス可能です。変数bとgetB()はインスタンスメンバです。選択肢CはMyClass.a（staticメンバへのアクセス）とnew MyClass().getB()（インスタンス化してアクセス）の適切な形です。選択肢Eもインスタンス化した上で変数aにアクセスしており可能です。選択肢A、Bはbがprivateのため不可。選択肢Fのgetが()はprivateのため不可。'
-  },
+  },,
   {
     id: 26,
     text: `次のプログラムを正しく説明しているものはどれですか。（3つ選択）
 
-InvalidDataExceptionを宣言し、validate()が呼ばれるたびに例外をキャッチして再スローします。`,
+
+<div class="code-block">
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">class</span> <span class="cls">InvalidDataException</span> <span class="kw">extends</span> Exception {
+<span class="line-num">2</span>    <span class="kw">public</span> <span class="cls">InvalidDataException</span>(String message, Throwable cause) {
+<span class="line-num">3</span>        <span class="kw">super</span>(message, cause);
+<span class="line-num">4</span>    }
+<span class="line-num">5</span>}
+<span class="line-num">6</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">7</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
+<span class="line-num">8</span>        String[] text = {<span class="kw">null</span>, <span class="str">"17"</span>, <span class="str">"Duke"</span>};
+<span class="line-num">9</span>        <span class="kw">for</span> (String s : text) {
+<span class="line-num">10</span>            <span class="kw">try</span> {
+<span class="line-num">11</span>                <span class="kw">if</span>(<span class="mth">validate</span>(s)) System.<span class="mth">out</span>.<span class="mth">println</span>(s);  <span class="cmt">// (A)</span>
+<span class="line-num">12</span>            } <span class="kw">catch</span> (Exception e) {  <span class="cmt">// (B)</span>
+<span class="line-num">13</span>                System.<span class="mth">out</span>.<span class="mth">println</span>(e.<span class="mth">getCause</span>());
+<span class="line-num">14</span>            }
+<span class="line-num">15</span>        }
+<span class="line-num">16</span>    }
+<span class="line-num">17</span>    <span class="kw">public static boolean</span> <span class="mth">validate</span>(String s) <span class="kw">throws</span> Exception {
+<span class="line-num">18</span>        <span class="kw">try</span> {
+<span class="line-num">19</span>            <span class="kw">char</span> c = s.<span class="mth">charAt</span>(<span class="num">0</span>);
+<span class="line-num">20</span>            <span class="kw">int</span> a = Integer.<span class="mth">parseInt</span>(s);
+<span class="line-num">21</span>        } <span class="kw">catch</span>(<span class="cls">NullPointerException</span> | <span class="cls">NumberFormatException</span> e) {
+<span class="line-num">22</span>            <span class="kw">throw</span> <span class="kw">new</span> <span class="cls">InvalidDataException</span>(e.<span class="mth">getMessage</span>(), e);  <span class="cmt">// (C)</span>
+<span class="line-num">23</span>        }
+<span class="line-num">24</span>        <span class="kw">return</span> <span class="kw">true</span>;
+<span class="line-num">25</span>    }
+<span class="line-num">26</span>}</pre>
+</div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
     optionTexts: [
       'Aのvalidate()は3回呼ばれるが、11行目からの出力は1度だけ行われる',
@@ -1692,21 +1850,21 @@ InvalidDataExceptionを宣言し、validate()が呼ばれるたびに例外を�
     correctTexts: ["Aのvalidate()は3回呼ばれるが、11行目からの出力は1度だけ行われる", "プログラムを実行すると、java.lang.NullPointerExceptionが出力される", "プログラムを実行すると、java.lang.NumberFormatExceptionが出力される"],
     selectCount: 3,
     explanation: '例外の再スローとThrowableクラスのメソッドについての問題です。選択肢Aは正解：validate()の呼び出しで例外がスローされない2つ目の要素のみ値が出力されます。選択肢Bは誤り：ループごとに適切に例外処理が行われるため、catchブロックの処理は複数回実行されます。選択肢Cも誤り：InvalidDataExceptionのコンストラクタに適切に値を渡しています。選択肢E、Fは正解：InvalidDataExceptionに関連付けられた例外の原因として出力されます。'
-  },
+  },,
   {
     id: 27,
     text: `次のプログラム（抜粋）をコンパイル、実行するとどのような結果になりますか。（1つ選択）
 
+
 <div class="code-block">
-  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> 抜粋（テキストブロック）</div>
-  <pre><span class="kw">var</span> s1 = <span class="str">"  "</span>;
-<span class="kw">var</span> s2 = <span class="str">""</span>;
-<span class="kw">var</span> text = <span class="str">"""
-            </span>
-<span class="str">            """</span>;  <span class="cmt">// スペースのみのテキストブロック</span>
-System.<span class="mth">out</span>.<span class="mth">println</span>(text != <span class="kw">null</span>);  <span class="cmt">// 7行目</span>
-System.<span class="mth">out</span>.<span class="mth">println</span>(text.<span class="mth">equals</span>(s1));  <span class="cmt">// 8行目</span>
-System.<span class="mth">out</span>.<span class="mth">println</span>(!(s1 == s2));    <span class="cmt">// 9行目</span></pre>
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java（抜粋）</div>
+  <pre><span class="line-num">1</span>    String s1 = <span class="kw">null</span>;
+<span class="line-num">2</span>    String s2 = <span class="str">""</span>;
+<span class="line-num">3</span>    String text = <span class="str">"""</span>
+<span class="line-num">4</span>                            <span class="str">"""</span>;
+<span class="line-num">5</span>    System.<span class="mth">out</span>.<span class="mth">print</span>(text != s1);
+<span class="line-num">6</span>    System.<span class="mth">out</span>.<span class="mth">print</span>(text == s2);
+<span class="line-num">7</span>    System.<span class="mth">out</span>.<span class="mth">print</span>(!(s1 == s2));</pre>
 </div>`,
     options: ['A', 'B', 'C', 'D', 'E'],
     optionTexts: [
@@ -1722,14 +1880,22 @@ System.<span class="mth">out</span>.<span class="mth">println</span>(!(s1 == s2)
     correctTexts: ["truetruetrueが出力される"],
     selectCount: 1,
     explanation: 'テキストブロックと演算子についての問題です。テキストブロックでは余分な空白は取り除かれるため、変数textが参照するオブジェクトはs2と同じ空文字列（""）です。7行目：textはnullでないのでtrue。8行目：textとs1はどちらも空文字列なのでequals()はtrue。9行目：s1とs2は同じ文字列リテラルの空文字列でインターン化されているため"=="はtrue、それを反転してfalseではなく...s1="  "とs2=""は内容が異なるためfalse、反転してtrue。よってtruetruetrueとなります。'
-  },
+  },,
   {
     id: 28,
-    text: `次のプログラムはMain.javaというファイルに記述されています。以下の方法で実行するとどのような結果になりますか。（1つ選択）
+    text: `次のプログラムのコンパイルが完了しています。以下の方法で実行するとどのような結果になりますか。（1つ選択）
 
-<code style="background:var(--surface2);padding:6px 12px;border-radius:4px;font-family:JetBrains Mono,monospace;font-size:13px;display:block;margin:8px 0;">  >java Main.java "00 01" 0010 0011</code>
+<code style="background:var(--surface2);padding:6px 12px;border-radius:4px;font-family:JetBrains Mono,monospace;font-size:13px;display:block;margin:8px 0;">  &gt;java Main.java "00 01" 0010 0011</code>
 
-プログラムはargs[1]とargs[2]をスペース区切りで出力します。`,
+
+<div class="code-block">
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">2</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
+<span class="line-num">3</span>        System.<span class="mth">out</span>.<span class="mth">println</span>(args[<span class="num">1</span>] + <span class="str">" "</span> + args[<span class="num">2</span>]);
+<span class="line-num">4</span>    }
+<span class="line-num">5</span>}</pre>
+</div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F'],
     optionTexts: [
       '12が出力される',
@@ -1745,23 +1911,28 @@ System.<span class="mth">out</span>.<span class="mth">println</span>(!(s1 == s2)
     correctTexts: ["0010 0011が出力される"],
     selectCount: 1,
     explanation: 'コマンドライン引数についての問題です。スペースを含めた文字列を1つのコマンドライン引数として渡す場合は「""」でその文字列を囲みます。設問のコマンドを実行すると、プログラムでは"00 01"、"0010"、"0011"の3つの文字列を配列で受け取ります。このうち2番目（args[1]）と3番目（args[2]）の要素を、間にスペースを入れて出力しているため選択肢Cが正解です。'
-  },
+  },,
   {
     id: 29,
     text: `次のプログラムでコンパイルエラーが発生する記述はどれですか。（1つ選択）
 
+
 <div class="code-block">
-  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> 抜粋（multi-catch）</div>
-  <pre><span class="kw">try</span> { ... }
-<span class="kw">catch</span> (NullPointerException | IOException e) { <span class="cmt">// A</span>
-    System.<span class="mth">out</span>.<span class="mth">println</span>(e);
-}
-<span class="kw">catch</span> (Exception e) { <span class="cmt">// B</span>
-    e = <span class="kw">new</span> RuntimeException(); <span class="cmt">// C</span>
-}
-<span class="kw">catch</span> (Throwable e) { <span class="cmt">// D</span>
-    e = <span class="kw">new</span> NullPointerException(); <span class="cmt">// E</span>
-}</pre>
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">2</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String... args) {
+<span class="line-num">3</span>        <span class="kw">try</span> {
+<span class="line-num">4</span>            String text = args[<span class="num">0</span>].<span class="mth">trim</span>();
+<span class="line-num">5</span>            <span class="kw">int</span> length = text.<span class="mth">length</span>();
+<span class="line-num">6</span>        } <span class="kw">catch</span> (<span class="cls">NullPointerException</span>  <span class="cmt">// (A)</span>
+<span class="line-num">7</span>                | <span class="cls">NumberFormatException</span>  <span class="cmt">// (B)</span>
+<span class="line-num">8</span>                | <span class="cls">ArrayIndexOutOfBoundsException</span> e) {  <span class="cmt">// (C)</span>
+<span class="line-num">9</span>            e = <span class="kw">new</span> <span class="cls">NullPointerException</span>(<span class="str">"Wrong operation"</span>);  <span class="cmt">// (D)</span>
+<span class="line-num">10</span>        } <span class="kw">catch</span> (Exception exception) {
+<span class="line-num">11</span>            exception = <span class="kw">new</span> Exception(<span class="str">"Unknown error"</span>);  <span class="cmt">// (E)</span>
+<span class="line-num">12</span>        }
+<span class="line-num">13</span>    }
+<span class="line-num">14</span>}</pre>
 </div>`,
     options: ['A', 'B', 'C', 'D', 'E'],
     optionTexts: [
@@ -1777,19 +1948,20 @@ System.<span class="mth">out</span>.<span class="mth">println</span>(!(s1 == s2)
     correctTexts: ["D"],
     selectCount: 1,
     explanation: 'multi-catchと通常のcatchブロックについての問題です。multi-catchを使用する場合、例外の参照変数は暗黙的にfinalとなるため値の再代入はできません。選択肢Dの位置（Aのcatch）で新たなNullPointerExceptionのオブジェクトを代入しているためコンパイルエラーになります。選択肢Eのように通常のcatchブロックであれば、別の例外オブジェクトを再代入することは可能です。'
-  },
+  },,
   {
     id: 30,
     text: `次のプログラム（抜粋）があります。
 
+
 <div class="code-block">
-  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> 抜粋（2次元配列の拡張for文）</div>
-  <pre><span class="kw">double</span>[][] dArr = {{<span class="num">0.1</span>,<span class="num">0.2</span>,<span class="num">0.3</span>},{<span class="num">4.0</span>,<span class="num">5.0</span>,<span class="num">6.0</span>}};
-<span class="kw">for</span> (/* (1) */) {
-    <span class="kw">for</span> (/* (2) */) {
-        System.<span class="mth">out</span>.<span class="mth">print</span>(d + <span class="str">" "</span>);
-    }
-}</pre>
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java（抜粋）</div>
+  <pre><span class="line-num">1</span>    <span class="kw">double</span>[][] dArr = {{<span class="num">0.1</span>, <span class="num">0.2</span>, <span class="num">0.3</span>},{<span class="num">4</span>, <span class="num">5</span>, <span class="num">6</span>}};
+<span class="line-num">2</span>    <span class="kw">for</span>( [ &nbsp;&nbsp;(<span class="num">1</span>)&nbsp;&nbsp; ] ) {
+<span class="line-num">3</span>        <span class="kw">for</span>( [ &nbsp;&nbsp;(<span class="num">2</span>)&nbsp;&nbsp; ] ) {
+<span class="line-num">4</span>            System.<span class="mth">out</span>.<span class="mth">print</span>(d + <span class="str">" "</span>);
+<span class="line-num">5</span>        }
+<span class="line-num">6</span>    }</pre>
 </div>
 
 <code style="background:var(--surface2);padding:4px 8px;border-radius:4px;font-family:JetBrains Mono,monospace;font-size:12px;">0.1 0.2 0.3 4.0 5.0 6.0</code> と出力するために（1）、（2）に記述できる組み合わせはどれですか。（2つ選択）`,
@@ -1808,14 +1980,39 @@ System.<span class="mth">out</span>.<span class="mth">println</span>(!(s1 == s2)
     correctTexts: ["(1) double[] arr : dArr\\n(2) double d : arr", "(1) var x : dArr\\n(2) var d : x"],
     selectCount: 2,
     explanation: '2次元配列の要素へのアクセスについての問題です。拡張for文で2次元配列を扱う場合、外側のループで1次元目の配列（double[]型）を受け取り、内側のループでその各要素（double型）を受け取ります。選択肢AとCが正しい組み合わせです（varの使用も可能）。選択肢Bは外側と内側が逆。選択肢Dは":"の右側に型を記述しているため不正。'
-  },
+  },,
   {
     id: 31,
     text: `次のプログラムのコンパイルが完了しています。以下の方法で実行するとどのような結果になりますか。（1つ選択）
 
-<code style="background:var(--surface2);padding:6px 12px;border-radius:4px;font-family:JetBrains Mono,monospace;font-size:13px;display:block;margin:8px 0;">  >java Main 1 1</code>
+<code style="background:var(--surface2);padding:6px 12px;border-radius:4px;font-family:JetBrains Mono,monospace;font-size:13px;display:block;margin:8px 0;">  &gt;java Main 1 1</code>
 
-オーバーロードされたmethod(double, double)、method(Double, int)、method(double, long)、method(int, int...)が定義されています。メソッドへの呼び出しはmethod(args[0] のlong型, args[1] のint型)です。`,
+
+<div class="code-block">
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">2</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String... args) {
+<span class="line-num">3</span>        <span class="kw">double</span> d = Double.<span class="mth">parseDouble</span>(args[<span class="num">0</span>]);
+<span class="line-num">4</span>        <span class="kw">int</span> i = Integer.<span class="mth">parseInt</span>(args[<span class="num">1</span>]);
+<span class="line-num">5</span>        <span class="kw">new</span> <span class="cls">Main</span>().<span class="mth">method</span>(d, i);
+<span class="line-num">6</span>    }
+<span class="line-num">7</span>    <span class="kw">public void</span> <span class="mth">method</span>(<span class="kw">double</span> x, <span class="kw">double</span> y) {
+<span class="line-num">8</span>        System.<span class="mth">out</span>.<span class="mth">println</span>(<span class="str">"A"</span>);
+<span class="line-num">9</span>    }
+<span class="line-num">10</span>    <span class="kw">public void</span> <span class="mth">method</span>(Double x, <span class="kw">float</span> y) {
+<span class="line-num">11</span>        System.<span class="mth">out</span>.<span class="mth">println</span>(<span class="str">"B"</span>);
+<span class="line-num">12</span>    }
+<span class="line-num">13</span>    <span class="kw">public void</span> <span class="mth">method</span>(<span class="kw">int</span>... x) {
+<span class="line-num">14</span>        System.<span class="mth">out</span>.<span class="mth">println</span>(<span class="str">"C"</span>);
+<span class="line-num">15</span>    }
+<span class="line-num">16</span>    <span class="kw">public void</span> <span class="mth">method</span>(Double... d) {
+<span class="line-num">17</span>        System.<span class="mth">out</span>.<span class="mth">println</span>(<span class="str">"D"</span>);
+<span class="line-num">18</span>    }
+<span class="line-num">19</span>    <span class="kw">public void</span> <span class="mth">method</span>(<span class="kw">long</span> x, <span class="kw">int</span> y) {
+<span class="line-num">20</span>        System.<span class="mth">out</span>.<span class="mth">println</span>(<span class="str">"E"</span>);
+<span class="line-num">21</span>    }
+<span class="line-num">22</span>}</pre>
+</div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F'],
     optionTexts: [
       'Aが出力される',
@@ -1831,29 +2028,31 @@ System.<span class="mth">out</span>.<span class="mth">println</span>(!(s1 == s2)
     correctTexts: ["Aが出力される"],
     selectCount: 1,
     explanation: 'オーバーロードされたメソッド呼び出しの優先度についての問題です。呼び出し元の引数リストがdouble型、int型のため、引数リストが完全一致するメソッド宣言がありませんが、基本データ型の暗黙の型変換（long→double）が可能なため、method(double, double)が呼ばれます。優先順は：①基本データ型の暗黙の型変換 → ②オートボクシング/アンボクシング → ③可変長引数。'
-  },
+  },,
   {
     id: 32,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
 
+
 <div class="code-block">
   <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
-  <pre><span class="kw">class</span> <span class="cls">Item</span> {
-    <span class="kw">private double</span> price;  <span class="cmt">// 5行目</span>
-    <span class="kw">private</span> <span class="cls">Item</span>() { <span class="mth">this</span>(<span class="num">0</span>); }
-    <span class="cls">Item</span>(<span class="kw">double</span> price) {
-        price = price; <span class="cmt">// this.price ではない（ローカル変数へ代入）</span>
-    }
-    <span class="kw">double</span> <span class="mth">getPrice</span>() { <span class="kw">return</span> price; }
-}
-<span class="kw">public class</span> <span class="cls">Main</span> {
-    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
-        Item a = <span class="kw">new</span> <span class="cls">Item</span>();
-        a.price = <span class="num">100.0</span>;     <span class="cmt">// A</span>
-        Item b = <span class="kw">new</span> <span class="cls">Item</span>(<span class="num">100</span>); <span class="cmt">// B</span>
-        System.<span class="mth">out</span>.<span class="mth">println</span>(a.<span class="mth">getPrice</span>()<span class="str">+": "</span>+b.<span class="mth">getPrice</span>());
-    }
-}</pre>
+  <pre><span class="line-num">1</span><span class="kw">public class</span> <span class="cls">Product</span> {
+<span class="line-num">2</span>    <span class="kw">private double</span> price;
+<span class="line-num">3</span>    <span class="kw">private</span> <span class="cls">Product</span>() {
+<span class="line-num">4</span>        <span class="kw">this</span>(<span class="num">100.0</span>);  <span class="cmt">// (A)</span>
+<span class="line-num">5</span>        System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">" 1:"</span> + price);
+<span class="line-num">6</span>    }
+<span class="line-num">7</span>    <span class="cls">Product</span>(<span class="kw">double</span> price) {
+<span class="line-num">8</span>        price = price;
+<span class="line-num">9</span>        System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">" 2:"</span> + price);
+<span class="line-num">10</span>    }
+<span class="line-num">11</span>    <span class="kw">public void</span> <span class="mth">print</span>() {
+<span class="line-num">12</span>        System.<span class="mth">out</span>.<span class="mth">println</span>(<span class="str">" 3:"</span> + <span class="kw">this</span>.price);
+<span class="line-num">13</span>    }
+<span class="line-num">14</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
+<span class="line-num">15</span>        <span class="kw">new</span> <span class="cls">Product</span>().<span class="mth">print</span>();  <span class="cmt">// (B)</span>
+<span class="line-num">16</span>    }
+<span class="line-num">17</span>}</pre>
 </div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
     optionTexts: [
@@ -1871,12 +2070,23 @@ System.<span class="mth">out</span>.<span class="mth">println</span>(!(s1 == s2)
     correctTexts: ["2:100.0 1:0.0 3:0.0が出力される"],
     selectCount: 1,
     explanation: 'アクセス修飾子、thisキーワードについての問題です。メンバ変数priceはprivateですが同じクラス内であれば13行目（a.price=100.0）のアクセスは可能。Itemコンストラクタの引数priceへの代入（price=price）はthis.priceとなっておらず、ローカル変数priceに値が代入されるだけです。そのためbのpriceは0.0のまま。aはprivateフィールドに直接アクセスして100.0を設定しているため、a.getPrice()は0.0、b.getPrice()は0.0、合わせて"2:100.0 1:0.0 ..."ではなく正確には0.0:0.0の問題ですが選択肢Fが正解。'
-  },
+  },,
   {
     id: 33,
-    text: `次のプログラム（抜粋）の説明として正しくないものはどれですか。（2つ選択）
+    text: `次のプログラムの説明として正しくないものはどれですか。（2つ選択）
 
-可変長引数のルールについての問題です。メソッドa()からe()が定義されています。`,
+
+<div class="code-block">
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">2</span>    <span class="kw">public void</span> <span class="mth">a</span>(String s1, String... s2) {}  <span class="cmt">// (A)</span>
+<span class="line-num">3</span>    <span class="kw">public void</span> <span class="mth">b</span>(String... s, <span class="kw">int</span> i) {}  <span class="cmt">// (B)</span>
+<span class="line-num">4</span>    <span class="kw">public void</span> <span class="mth">c</span>(<span class="kw">var</span> x, <span class="kw">var</span>... y) {}  <span class="cmt">// (C)</span>
+<span class="line-num">5</span>    <span class="kw">public void</span> <span class="mth">d</span>(<span class="kw">int</span>... i, <span class="kw">int</span>... j) {}  <span class="cmt">// (D)</span>
+<span class="line-num">6</span>    <span class="kw">public void</span> <span class="mth">e</span>(String... s) {}  <span class="cmt">// (E)</span>
+<span class="line-num">7</span>    <span class="kw">public void</span> <span class="mth">f</span>(<span class="kw">double</span>[] d1, <span class="kw">double</span>... d2) {}  <span class="cmt">// (F)</span>
+<span class="line-num">8</span>}</pre>
+</div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F'],
     optionTexts: [
       'Aのように同じデータ型のみの引数リストの場合も、そのうち1つを可変長にすることができる',
@@ -1892,12 +2102,31 @@ System.<span class="mth">out</span>.<span class="mth">println</span>(!(s1 == s2)
     correctTexts: ["Cのvarは可変長引数にすることができないため、第2引数をvar yと通常の変数にすることでコンパイルが成功する", "Fのように同じデータ型で配列と可変長引数の両方を指定することはできず、コンパイルエラーが発生する"],
     selectCount: 2,
     explanation: '可変長引数のルールについての問題です。選択肢Cについて、メソッドの引数にvarを使用することはできないため、var yに変更してもコンパイルエラーとなります。選択肢Fの指定（配列と可変長引数の両方）は可能です。可変長引数は内部で配列として扱われますが、第1引数の配列と可変長の配列は別の配列であり問題なく扱えます。これらCとFが「正しくない説明」です。'
-  },
+  },,
   {
     id: 34,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
 
-Personクラスにはメンバ変数name（インスタンス初期化子で"N/A"に設定）と2つのコンストラクタがあります。MainクラスではPersonオブジェクトを1つ生成し（"Duke"）、参照変数oneとtwoで同じオブジェクトを参照。11行目でnameを"James"に変更して出力。13行目で2つ目のオブジェクト（引数なしコンストラクタ）を生成して出力。`,
+
+<div class="code-block">
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">public class</span> <span class="cls">Person</span> {
+<span class="line-num">2</span>    <span class="kw">public</span> String name;
+<span class="line-num">3</span>    { name = <span class="str">"N/A"</span>; }
+<span class="line-num">4</span>    <span class="kw">public</span> <span class="cls">Person</span>() {}
+<span class="line-num">5</span>    <span class="kw">public</span> <span class="cls">Person</span>(String name) { <span class="kw">this</span>.name = name; }
+<span class="line-num">6</span>}
+<span class="line-num">7</span><span class="kw">class</span> <span class="cls">Main</span> {
+<span class="line-num">8</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
+<span class="line-num">9</span>        <span class="cls">Person</span> one = <span class="kw">new</span> <span class="cls">Person</span>(<span class="str">"Duke"</span>);
+<span class="line-num">10</span>        <span class="cls">Person</span> two = one;
+<span class="line-num">11</span>        two.name = <span class="str">"James"</span>;
+<span class="line-num">12</span>        System.<span class="mth">out</span>.<span class="mth">print</span>(one.name + <span class="str">":"</span> + two.name + <span class="str">":"</span>);
+<span class="line-num">13</span>        <span class="cls">Person</span> three = <span class="kw">new</span> <span class="cls">Person</span>();
+<span class="line-num">14</span>        System.<span class="mth">out</span>.<span class="mth">print</span>(three.name);
+<span class="line-num">15</span>    }
+<span class="line-num">16</span>}</pre>
+</div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
     optionTexts: [
       'Duke:James:N/Aが出力される',
@@ -1914,7 +2143,7 @@ Personクラスにはメンバ変数name（インスタンス初期化子で"N/A
     correctTexts: ["James:James:N/Aが出力される"],
     selectCount: 1,
     explanation: 'コンストラクタ、オブジェクトの参照関係についての問題です。oneとtwoは同じオブジェクトを参照しており、11行目でnameを"James"に変更するため12行目の出力はJames:Jamesです。13行目で2つ目のオブジェクトを生成しており、引数なしのコンストラクタには処理がありませんが、インスタンス初期化子によりnameには"N/A"が設定されます。'
-  },
+  },,
   {
     id: 35,
     text: '次の記述のうち例外処理が必須のものはどれですか。（2つ選択）',
@@ -1934,23 +2163,27 @@ Personクラスにはメンバ変数name（インスタンス初期化子で"N/A
     correctTexts: ["java.io.IOException", "java.io.FileNotFoundException"],
     selectCount: 2,
     explanation: 'チェック例外と非チェック例外についての問題です。java.lang.Exceptionを継承したクラスのうち、java.lang.RuntimeExceptionとそのサブクラス以外はチェック例外です。java.io.IOExceptionはチェック例外で、java.io.FileNotFoundExceptionはそのサブクラスのため例外処理が必須です。選択肢Bはjava.lang.Errorの系列のサブクラスで非チェック例外です。'
-  },
+  },,
   {
     id: 36,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
 
+
 <div class="code-block">
-  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> 抜粋</div>
-  <pre><span class="kw">int</span> value = <span class="num">0x000B</span>;  <span class="cmt">// 10進数の11</span>
-String result;
-<span class="kw">if</span> (value &gt; <span class="num">10</span> && value &lt; <span class="num">20</span>) {
-    result = <span class="str">"value: "</span> + value * <span class="num">2</span>;
-} <span class="kw">else if</span> (value &gt; <span class="num">5</span> & value &lt; <span class="num">15</span>) {
-    result = <span class="str">"value: "</span> - value;  <span class="cmt">// ← 9行目</span>
-} <span class="kw">else</span> {
-    result = <span class="str">"value: 0"</span>;
-}
-System.<span class="mth">out</span>.<span class="mth">println</span>(result);</pre>
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">2</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
+<span class="line-num">3</span>        <span class="kw">int</span> value = <span class="num">0x000B</span>;
+<span class="line-num">4</span>        <span class="kw">if</span>(value &lt;= <span class="num">0</span>)
+<span class="line-num">5</span>            System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"value: "</span> + value + <span class="num">2</span> + <span class="num">10</span>);
+<span class="line-num">6</span>        <span class="kw">else if</span>(value &gt; <span class="num">0</span> &amp;&amp; value &lt; <span class="num">10</span>)
+<span class="line-num">7</span>            System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"value: "</span> + value * <span class="num">2</span> + <span class="num">10</span>);
+<span class="line-num">8</span>        <span class="kw">else if</span>(value &gt;= <span class="num">10</span> &amp; value &lt;<span class="num">20</span>)
+<span class="line-num">9</span>            System.<span class="mth">out</span>.<span class="mth">println</span>(<span class="str">"value: "</span> + value - value);
+<span class="line-num">10</span>        <span class="kw">else</span>
+<span class="line-num">11</span>            System.<span class="mth">out</span>.<span class="mth">println</span>(<span class="str">"value: "</span> + value + value);
+<span class="line-num">12</span>    }
+<span class="line-num">13</span>}</pre>
 </div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
     optionTexts: [
@@ -1968,19 +2201,27 @@ System.<span class="mth">out</span>.<span class="mth">println</span>(result);</p
     correctTexts: ["コンパイルエラーが発生する"],
     selectCount: 1,
     explanation: '演算子と優先順位についての問題です。9行目では文字列に-演算子を使用しています。文字列に+演算子は文字列連結となりますが、文字列に-演算子は使用できないためコンパイルエラーが発生します。'
-  },
+  },,
   {
     id: 37,
     text: `次のプログラム（抜粋）でコンパイルエラーが発生する行はどこですか。（3つ選択）
 
+
 <div class="code-block">
-  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> 抜粋（var型推論）</div>
-  <pre><span class="kw">var</span> a = <span class="num">1</span>, b = <span class="num">2</span>;  <span class="cmt">// A</span>
-<span class="kw">var</span> c;             <span class="cmt">// B</span>
-<span class="kw">var</span> d = <span class="kw">null</span>;     <span class="cmt">// C</span>
-<span class="kw">final var</span> e = <span class="num">100</span>; <span class="cmt">// D</span>
-<span class="kw">var</span>[] f = <span class="kw">new</span> <span class="kw">int</span>[<span class="num">3</span>]; <span class="cmt">// E（正しくはvar f = new int[3]）</span>
-<span class="kw">for</span> (<span class="kw">var</span> i = <span class="num">0</span>; i &lt; <span class="num">3</span>; i++) { <span class="cmt">// F</span></pre>
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">2</span>    <span class="kw">var</span> a = <span class="str">"Main"</span>;  <span class="cmt">// (A)</span>
+<span class="line-num">3</span>    <span class="kw">var</span> b = <span class="kw">null</span>;  <span class="cmt">// (B)</span>
+<span class="line-num">4</span>    <span class="kw">void</span> <span class="mth">test</span>(<span class="kw">int</span> a) {
+<span class="line-num">5</span>        <span class="kw">var</span> x1 = <span class="num">1</span>, x2 = <span class="num">2</span>;  <span class="cmt">// (C)</span>
+<span class="line-num">6</span>        <span class="kw">final var</span> x3 = <span class="num">3.14</span>f;  <span class="cmt">// (D)</span>
+<span class="line-num">7</span>        <span class="kw">var</span> arr = <span class="kw">new int</span>[]{<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>};  <span class="cmt">// (E)</span>
+<span class="line-num">8</span>        <span class="kw">for</span> (<span class="kw">var</span> i : arr) System.<span class="mth">out</span>.<span class="mth">print</span>(i);  <span class="cmt">// (F)</span>
+<span class="line-num">9</span>        <span class="kw">var</span> list = <span class="kw">new</span> ArrayList&lt;&gt;();  <span class="cmt">// (G)</span>
+<span class="line-num">10</span>        list.<span class="mth">add</span>(<span class="str">' '</span>);
+<span class="line-num">11</span>        list.<span class="mth">add</span>(<span class="str">"LIST"</span>);  <span class="cmt">// (H)</span>
+<span class="line-num">12</span>    }
+<span class="line-num">13</span>}</pre>
 </div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'],
     optionTexts: [
@@ -1999,12 +2240,37 @@ System.<span class="mth">out</span>.<span class="mth">println</span>(result);</p
     correctTexts: ["A", "B", "C"],
     selectCount: 3,
     explanation: 'ローカル変数の型推論についての問題です。varはメンバ変数には使用できません。また型推論ができないためnullの代入もできません。そしてカンマ区切りで複数の変数宣言をすることもできないため、選択肢A（複数宣言）、B（初期化なし）、C（null代入）がコンパイルエラーとなります。'
-  },
+  },,
   {
     id: 38,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
 
-Countryレコードと、Customerクラス（name, countryフィールド）があります。4つのCustomerオブジェクトで参照関係を確認するプログラムです。`,
+
+<div class="code-block">
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">record</span> <span class="cls">Country</span>(String name) {}
+<span class="line-num">2</span><span class="kw">public class</span> <span class="cls">Customer</span> {
+<span class="line-num">3</span>    String name;
+<span class="line-num">4</span>    <span class="cls">Country</span> country;
+<span class="line-num">5</span>    <span class="cls">Customer</span>(String name, <span class="cls">Country</span> country) {
+<span class="line-num">6</span>        <span class="kw">this</span>.name = name; <span class="kw">this</span>.country = country;
+<span class="line-num">7</span>    }
+<span class="line-num">8</span>}
+<span class="line-num">9</span><span class="kw">class</span> <span class="cls">Main</span> {
+<span class="line-num">10</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
+<span class="line-num">11</span>        <span class="cls">Customer</span> c1 = <span class="kw">new</span> <span class="cls">Customer</span>(<span class="str">"Duke"</span>, <span class="kw">new</span> <span class="cls">Country</span>(<span class="str">"US"</span>));
+<span class="line-num">12</span>        <span class="cls">Customer</span> c2 = c1;
+<span class="line-num">13</span>        <span class="cls">Customer</span> c3 = <span class="kw">new</span> <span class="cls">Customer</span>(<span class="str">"Carol"</span>, <span class="kw">new</span> <span class="cls">Country</span>(<span class="str">"US"</span>));
+<span class="line-num">14</span>        <span class="cls">Customer</span> c4 = <span class="kw">new</span> <span class="cls">Customer</span>(<span class="str">"Johann"</span>, <span class="kw">new</span> <span class="cls">Country</span>(<span class="str">"Germany"</span>));
+<span class="line-num">15</span>        String result = <span class="str">""</span>;
+<span class="line-num">16</span>        result += c1 == c2 ?  <span class="str">"Y:"</span> : <span class="str">"N:"</span>;
+<span class="line-num">17</span>        result += !(c2.country == c3.country) ?  <span class="str">"Y:"</span> : <span class="str">"N:"</span>;
+<span class="line-num">18</span>        result += c2.country.<span class="mth">name</span>() == c3.country.<span class="mth">name</span>() ? <span class="str">"Y:"</span> : <span class="str">"N:"</span>;
+<span class="line-num">19</span>        result += c3.name == c4.name ?  <span class="str">"Y:"</span> : <span class="str">"N:"</span>;
+<span class="line-num">20</span>        System.<span class="mth">out</span>.<span class="mth">println</span>(result);
+<span class="line-num">21</span>    }
+<span class="line-num">22</span>}</pre>
+</div>`,
     options: ['A', 'B', 'C', 'D', 'E'],
     optionTexts: [
       'Y:Y:Y:Y:が出力される',
@@ -2019,12 +2285,32 @@ Countryレコードと、Customerクラス（name, countryフィールド）が�
     correctTexts: ["Y:Y:Y:N:が出力される"],
     selectCount: 1,
     explanation: 'オブジェクトの参照関係についての問題です。15-18行目で比較を行い、結果の文字列として"Y:"か"N:"を変数resultに文字列連結しています。上から、参照が一致するためY:、c2とc3のメンバ変数のcountryの参照先が一致するかを比較し反転してY:、c2とc3のCountryレコードのnameが一致するかを比較するためY:、最後にc3とc4のCustomerのnameが一致するかを比較するためN:が代入されます。'
-  },
+  },,
   {
     id: 39,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
 
-なお実行の際はコマンドライン引数を渡さないものとします。複数のcatchブロックがありますが、継承関係のある例外の指定順が誤っています（スーパークラスが先）。`,
+なお実行の際はコマンドライン引数を渡さないものとします。
+
+
+<div class="code-block">
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">2</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String... args) {
+<span class="line-num">3</span>        <span class="kw">try</span> {
+<span class="line-num">4</span>            args[<span class="num">0</span>].<span class="mth">charAt</span>(<span class="num">0</span>);
+<span class="line-num">5</span>            System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"A"</span>);
+<span class="line-num">6</span>        } <span class="kw">catch</span> (Exception e) {
+<span class="line-num">7</span>            System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"B"</span>);
+<span class="line-num">8</span>        } <span class="kw">catch</span> (<span class="cls">NullPointerException</span>
+<span class="line-num">9</span>                | <span class="cls">IndexOutOfBoundsException</span> e) {
+<span class="line-num">10</span>            System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"C"</span>);
+<span class="line-num">11</span>        } <span class="kw">finally</span> {
+<span class="line-num">12</span>            System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"E"</span>);
+<span class="line-num">13</span>        }
+<span class="line-num">14</span>    }
+<span class="line-num">15</span>}</pre>
+</div>`,
     options: ['A', 'B', 'C', 'D', 'E'],
     optionTexts: [
       'ABEが出力される',
@@ -2039,12 +2325,37 @@ Countryレコードと、Customerクラス（name, countryフィールド）が�
     correctTexts: ["コンパイルエラーが発生する"],
     selectCount: 1,
     explanation: 'catchブロックの指定順についての問題です。複数のcatchブロックで継承関係のある例外クラスを指定する場合は、サブクラスの例外を先にキャッチします。この順番が逆になっているため、2つ目のcatchブロックに制御が移ることはなく、コンパイルエラーになります。'
-  },
+  },,
   {
     id: 40,
     text: `次のプログラムを正しく説明しているものはどれですか。（1つ選択）
 
-Aクラス（コンストラクタA(int)とA(String)）、BクラスがAを継承（コンストラクタB(int, String)）、CクラスがBを継承（コンストラクタC(int)とC(String)）。main()でnew C()を呼び出します。`,
+
+<div class="code-block">
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">2</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
+<span class="line-num">3</span>        <span class="kw">new</span> <span class="cls">C</span>();  <span class="cmt">// (A)</span>
+<span class="line-num">4</span>    }
+<span class="line-num">5</span>}
+<span class="line-num">6</span><span class="kw">class</span> <span class="cls">A</span> {
+<span class="line-num">7</span>    <span class="cls">A</span>() { System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"A"</span>); }
+<span class="line-num">8</span>    <span class="cls">A</span>(<span class="kw">int</span> i) { System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"A"</span> + i); }
+<span class="line-num">9</span>}
+<span class="line-num">10</span><span class="kw">class</span> <span class="cls">B</span> <span class="kw">extends</span> <span class="cls">A</span> {
+<span class="line-num">11</span>    <span class="kw">public</span> <span class="cls">B</span>() {
+<span class="line-num">12</span>        <span class="kw">super</span>(<span class="num">1</span>);
+<span class="line-num">13</span>        System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"B"</span>);
+<span class="line-num">14</span>    }
+<span class="line-num">15</span>}
+<span class="line-num">16</span><span class="kw">class</span> <span class="cls">C</span> <span class="kw">extends</span> <span class="cls">B</span> {
+<span class="line-num">17</span>    <span class="kw">public</span> <span class="cls">C</span>() {
+<span class="line-num">18</span>        <span class="kw">this</span>(<span class="num">2</span>);
+<span class="line-num">19</span>        System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"C"</span>);
+<span class="line-num">20</span>    }
+<span class="line-num">21</span>    <span class="kw">public</span> <span class="cls">C</span>(<span class="kw">int</span> i) { System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"C"</span> + i); }
+<span class="line-num">22</span>}</pre>
+</div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F'],
     optionTexts: [
       'A（3行目）の記述が適切でないため、コンパイルエラーが発生する',
@@ -2060,27 +2371,39 @@ Aクラス（コンストラクタA(int)とA(String)）、BクラスがAを継�
     correctTexts: ["正常にコンパイル、実行でき、A1BC2Cが出力される"],
     selectCount: 1,
     explanation: '継承関係におけるコンストラクタの実行順についての問題です。new C()により、this(2)でC(int)コンストラクタが呼ばれ、その処理の中で暗黙的にsuper()が呼ばれ、B(int, String)のコンストラクタに制御が移り、さらにsuper(1)でA(int)のコンストラクタが呼ばれます。よってA→B→Cの順でオブジェクトが初期化され、A1BC2Cが出力されます。'
-  },
+  },,
   {
     id: 41,
     text: `次のプログラムがあります。
 
+
 <div class="code-block">
-  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java（アクセス修飾子）</div>
-  <pre><span class="cmt">// package com.a</span>
-<span class="kw">public class</span> <span class="cls">Super</span> {
-    <span class="kw">int</span> no;            <span class="cmt">// A</span>
-    <span class="kw">protected int</span> no2; <span class="cmt">// C</span>
-    <span class="kw">private</span> String name; <span class="cmt">// D</span>
-}
-<span class="cmt">// package com.b</span>
-<span class="kw">public class</span> <span class="cls">Sub</span> <span class="kw">extends</span> <span class="cls">Super</span> {
-    <span class="kw">void</span> <span class="mth">display</span>() {}   <span class="cmt">// A</span>
-    <span class="kw">protected void</span> <span class="mth">show</span>() { no2++; }  <span class="cmt">// C</span>
-    String s = name;   <span class="cmt">// D</span>
-    <span class="kw">int</span> n = Sub.no;     <span class="cmt">// E</span>
-    <span class="kw">public void</span> <span class="mth">display</span>() {}  <span class="cmt">// A（オーバーライド）</span>
-}</pre>
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> ex41¥Super.java</div>
+  <pre><span class="line-num">1</span><span class="kw">package</span> com;
+<span class="line-num">2</span><span class="kw">public class</span> <span class="cls">Super</span> {
+<span class="line-num">3</span>    <span class="kw">protected int</span> no = <span class="num">100</span>;
+<span class="line-num">4</span>    <span class="kw">private</span> String name = <span class="str">"Super"</span>;
+<span class="line-num">5</span>    <span class="kw">protected void</span> <span class="mth">display</span>() { System.<span class="mth">out</span>.<span class="mth">print</span>(no +<span class="str">":"</span> + name); }
+<span class="line-num">6</span>}</pre>
+</div>
+
+
+<div class="code-block">
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> ex41¥Sub.java</div>
+  <pre><span class="line-num">1</span><span class="kw">package</span> com.sub;
+<span class="line-num">2</span><span class="kw">import</span> com.Super;
+<span class="line-num">3</span><span class="kw">public class</span> <span class="cls">Sub</span> <span class="kw">extends</span> <span class="cls">Super</span> {
+<span class="line-num">4</span>    <span class="kw">private</span> String name = <span class="str">"Sub"</span>;
+<span class="line-num">5</span>    <span class="kw">public void</span> <span class="mth">display</span>() {  <span class="cmt">// (A)</span>
+<span class="line-num">6</span>        <span class="kw">super</span>.<span class="mth">display</span>();  <span class="cmt">// (B)</span>
+<span class="line-num">7</span>        System.<span class="mth">out</span>.<span class="mth">print</span>(no + <span class="str">":"</span>);  <span class="cmt">// (C)</span>
+<span class="line-num">8</span>        System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="kw">super</span>.name + <span class="str">":"</span>);  <span class="cmt">// (D)</span>
+<span class="line-num">9</span>        System.<span class="mth">out</span>.<span class="mth">print</span>(Sub.name + <span class="str">":"</span>);  <span class="cmt">// (E)</span>
+<span class="line-num">10</span>    }
+<span class="line-num">11</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
+<span class="line-num">12</span>        <span class="kw">new</span> <span class="cls">Sub</span>().<span class="mth">display</span>();  <span class="cmt">// (F)</span>
+<span class="line-num">13</span>    }
+<span class="line-num">14</span>}</pre>
 </div>
 
 コンパイルエラーが発生する記述はどれですか。（2つ選択）`,
@@ -2099,14 +2422,36 @@ Aクラス（コンストラクタA(int)とA(String)）、BクラスがAを継�
     correctTexts: ["D", "E"],
     selectCount: 2,
     explanation: 'アクセス修飾子についての問題です。選択肢DはSuperクラスのメンバ変数nameがprivateのため、異なるクラスからはアクセスできません。選択肢EのSub.nameは、クラス名でnameにアクセスしていますが、nameはstaticではなくインスタンス変数のためコンパイルエラーとなります。選択肢Aはアクセス範囲を広げる方向のオーバーライドで問題なし。選択肢CはprotectedなのでサブクラスからOK。'
-  },
+  },,
   {
     id: 42,
     text: `次のプログラムがあります。
 
-<code style="background:var(--surface2);padding:4px 8px;border-radius:4px;font-family:JetBrains Mono,monospace;font-size:13px;">N/A:A Book</code> と <code style="background:var(--surface2);padding:4px 8px;border-radius:4px;font-family:JetBrains Mono,monospace;font-size:13px;">Waltz:Francois</code> を出力するために15-17行目の範囲に必要な記述はどれですか。（2つ選択）
 
-Bookクラス（genre="N/A"、title="A Book"のフィールドを持つ通常クラス）とMusicレコード（genreとcomposerコンポーネント）があります。`,
+<div class="code-block">
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">class</span> <span class="cls">Book</span> {
+<span class="line-num">2</span>    <span class="kw">private</span> String genre = <span class="str">"N/A"</span>;
+<span class="line-num">3</span>    <span class="kw">private</span> String title =<span class="str">"A Book"</span>;
+<span class="line-num">4</span>    <span class="cls">Book</span>() {}
+<span class="line-num">5</span>    <span class="cls">Book</span>(String genre, String title) {
+<span class="line-num">6</span>        <span class="kw">this</span>.genre = genre;
+<span class="line-num">7</span>        <span class="kw">this</span>.title = title;
+<span class="line-num">8</span>    }
+<span class="line-num">9</span>    <span class="kw">public</span> String <span class="mth">getGenre</span>() { <span class="kw">return</span> genre; }
+<span class="line-num">10</span>    <span class="kw">public</span> String <span class="mth">getTitle</span>() { <span class="kw">return</span> title; }
+<span class="line-num">11</span>}
+<span class="line-num">12</span><span class="kw">record</span> <span class="cls">Music</span>(String genre, String composer) {}
+<span class="line-num">13</span><span class="kw">class</span> <span class="cls">Main</span> {
+<span class="line-num">14</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String... args) {
+<span class="line-num">15</span>        <span class="cmt">/*</span>
+<span class="line-num">16</span>        <span class="cmt">  insert code here</span>
+<span class="line-num">17</span>        <span class="cmt">*/</span>
+<span class="line-num">18</span>    }
+<span class="line-num">19</span>}</pre>
+</div>
+
+<code style="background:var(--surface2);padding:4px 8px;border-radius:4px;font-family:JetBrains Mono,monospace;font-size:13px;">N/A:A Book</code> と <code style="background:var(--surface2);padding:4px 8px;border-radius:4px;font-family:JetBrains Mono,monospace;font-size:13px;">Waltz:Francois</code> を出力するために15-17行目の範囲に必要な記述はどれですか。（2つ選択）`,
     options: ['A', 'B', 'C', 'D', 'E', 'F'],
     optionTexts: [
       'Book book = new Book();\nSystem.out.println(book.getGenre() + ":" + book.getTitle());',
@@ -2122,12 +2467,36 @@ Bookクラス（genre="N/A"、title="A Book"のフィールドを持つ通常ク
     correctTexts: ["Book book = new Book();\\nSystem.out.println(book.getGenre() + \":\" + book.getTitle());", "Music music = new Music(\"Waltz\", \"Francois\");\\nSystem.out.println(music.genre() + \":\" + music.composer());"],
     selectCount: 2,
     explanation: 'レコードクラスの生成とコンポーネントへのアクセスについての問題です。N/A:A Bookの出力には引数なしコンストラクタでBookを生成してgetterメソッドを使う選択肢Aが正解。選択肢B、Cの場合はBook@...のような出力となります。Waltz:Francoisの出力については、レコードにはコンポーネントと同じ名前のアクセサメソッドが生成されるため、genre()とcomposer()でアクセスする選択肢Fが正解。選択肢Dは引数なしでMusicレコードは生成できません。'
-  },
+  },,
   {
     id: 43,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
 
-Baseクラス（abstract、type="abstract"）、Fooクラス（extends Base、type="class"）、Barクラス（独立、type="class"）。オーバーロードされたprint()（Bar型引数と可変長Base[]引数）。main()ではBase型変数にFooオブジェクト、Foo型変数にキャスト、様々な呼び出しがあります。`,
+
+<div class="code-block">
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">2</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
+<span class="line-num">3</span>        <span class="cls">Bar</span> bar = <span class="kw">new</span> <span class="cls">Bar</span>();
+<span class="line-num">4</span>        <span class="cls">Base</span> base = <span class="kw">new</span> <span class="cls">Foo</span>();
+<span class="line-num">5</span>        <span class="cls">Foo</span> foo = (<span class="cls">Foo</span>)base;
+<span class="line-num">6</span>        <span class="mth">print</span>(bar);
+<span class="line-num">7</span>        <span class="mth">print</span>(bar, base, foo);
+<span class="line-num">8</span>        <span class="mth">print</span>();
+<span class="line-num">9</span>    }
+<span class="line-num">10</span>    <span class="kw">static void</span> <span class="mth">print</span>(<span class="cls">Base</span>... obj) {
+<span class="line-num">11</span>        <span class="kw">for</span> (<span class="cls">Base</span> b : obj) {
+<span class="line-num">12</span>            System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"Base:"</span> + b.type);
+<span class="line-num">13</span>        }
+<span class="line-num">14</span>    }
+<span class="line-num">15</span>    <span class="kw">static void</span> <span class="mth">print</span>(<span class="cls">Bar</span> obj) {
+<span class="line-num">16</span>        System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"Bar:"</span> + obj.type);
+<span class="line-num">17</span>    }
+<span class="line-num">18</span>}
+<span class="line-num">19</span><span class="kw">abstract class</span> <span class="cls">Base</span> { String type = <span class="str">"abstract "</span>; }
+<span class="line-num">20</span><span class="kw">class</span> <span class="cls">Foo</span> <span class="kw">extends</span> <span class="cls">Base</span> { String type = <span class="str">"class "</span>; }
+<span class="line-num">21</span><span class="kw">class</span> <span class="cls">Bar</span> <span class="kw">extends</span> <span class="cls">Foo</span> { String type = <span class="str">"class "</span>; }</pre>
+</div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
     optionTexts: [
       'Bar:class Base:abstract Base:abstract Base:abstract が出力される',
@@ -2144,20 +2513,21 @@ Baseクラス（abstract、type="abstract"）、Fooクラス（extends Base、ty
     correctTexts: ["Bar:class Base:abstract Base:abstract Base:abstract が出力される"],
     selectCount: 1,
     explanation: '参照型の型変換とメンバ変数へのアクセスについての問題です。引数がBar型のメソッドではBarクラスのtype（class）が出力され、可変長引数を受け取るメソッドではBaseクラスのtype（abstract）にアクセスするためすべてabstractが出力されます。引数なしで可変長引数のprint()を呼び出す場合は要素数0の配列を受け取るため、拡張for文は実行されず何も出力されません。'
-  },
+  },,
   {
     id: 44,
     text: `次のプログラムがあります。コンパイルを成功させるために6行目に必要な記述はどれですか。（1つ選択）
 
+
 <div class="code-block">
   <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Foo.java</div>
-  <pre><span class="kw">interface</span> <span class="cls">Printable</span> {
-    CharSequence <span class="mth">x</span>();   <span class="cmt">// abstract</span>
-}
-<span class="kw">class</span> <span class="cls">Foo</span> <span class="kw">implements</span> <span class="cls">Printable</span> {
-    String name;
-    <span class="cmt">// 6行目: Printable.x()のオーバーライド</span>
-}</pre>
+  <pre><span class="line-num">1</span><span class="kw">interface</span> <span class="cls">X</span> {
+<span class="line-num">2</span>    CharSequence <span class="mth">x</span>();
+<span class="line-num">3</span>}
+<span class="line-num">4</span><span class="kw">class</span> <span class="cls">Foo</span> <span class="kw">implements</span> <span class="cls">X</span> {
+<span class="line-num">5</span>    String name = <span class="str">"Foo"</span>;
+<span class="line-num">6</span>    <span class="cmt">// insert code here</span>
+<span class="line-num">7</span>}</pre>
 </div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
     optionTexts: [
@@ -2175,12 +2545,29 @@ Baseクラス（abstract、type="abstract"）、Fooクラス（extends Base、ty
     correctTexts: ["public StringBuilder x() { return new StringBuilder(name); }"],
     selectCount: 1,
     explanation: 'メソッドのオーバーライドについての問題です。オーバーライドを行う際に、戻り値についてはスーパークラスのメソッドと同じ型かそのサブクラスに変更できます。CharSequenceはStringやStringBuilderが実装しているインタフェースです。インタフェースの抽象メソッドは暗黙的にpublicのため、可視性を狭める変更（A、B）はできません。選択肢Dのreturn ObjectはCharSequenceを実装していないため不可。選択肢C、Eは引数リストを変更しているためオーバーライドになりません。選択肢Fは適切にオーバーライドされています。'
-  },
+  },,
   {
     id: 45,
     text: `次のプログラムを正しく説明しているものはどれですか。（3つ選択）
 
-インタフェースX（defaultメソッドcalculate()）、インタフェースY（Xをextendsしてdefaultメソッドcalculate()）、クラスOne（XとYを実装：衝突発生）、クラスTwo（Oneを継承）。`,
+
+<div class="code-block">
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">interface</span> <span class="cls">X</span> {
+<span class="line-num">2</span>    <span class="kw">double</span> POINT_RATE = <span class="num">0.05</span>;
+<span class="line-num">3</span>    <span class="kw">default</span> Number <span class="mth">calculate</span> (<span class="kw">int</span> price) {
+<span class="line-num">4</span>        <span class="kw">return</span> (<span class="kw">int</span>)(price * POINT_RATE);
+<span class="line-num">5</span>    }
+<span class="line-num">6</span>}
+<span class="line-num">7</span><span class="kw">interface</span> <span class="cls">Y</span> {  <span class="cmt">// (A)</span>
+<span class="line-num">8</span>    <span class="kw">double</span> TAX_RATE = <span class="num">0.1</span>;
+<span class="line-num">9</span>    <span class="kw">default</span> Number <span class="mth">calculate</span> (<span class="kw">int</span> price) {
+<span class="line-num">10</span>        <span class="kw">return</span> (<span class="kw">int</span>)(price * TAX_RATE);
+<span class="line-num">11</span>    }
+<span class="line-num">12</span>}
+<span class="line-num">13</span><span class="kw">class</span> <span class="cls">One</span> <span class="kw">implements</span> <span class="cls">X</span>,  <span class="cls">Y</span> {}  <span class="cmt">// (A)</span>
+<span class="line-num">14</span><span class="kw">class</span> <span class="cls">Two</span> <span class="kw">extends</span> <span class="cls">One</span> {}</pre>
+</div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F'],
     optionTexts: [
       'Aの2行について変更するとコンパイルが成功する（interface Y extends X、class One implements Y）',
@@ -2196,24 +2583,35 @@ Baseクラス（abstract、type="abstract"）、Fooクラス（extends Base、ty
     correctTexts: ["Aの2行について変更するとコンパイルが成功する（interface Y extends X、class One implements Y）", "クラスOneでオーバーライドを行い（public Number calculate）X.super.calculate()を呼び出すとコンパイルが成功する", "クラスOneでオーバーライドを行い（public Integer calculate）return price-100とするとコンパイルが成功する"],
     selectCount: 3,
     explanation: 'インタフェースのdefaultメソッドについての問題です。XとYに同じシグネチャのcalculate()が存在するためOneでは衝突が発生します。選択肢Aのように継承関係の構造を変えると解消します。選択肢C、DのようにOneでオーバーライドしても解消します（Integerはnumberのサブクラスなので戻り値の変更も可能）。「インタフェース名.super.メソッド名()」は直接の実装クラスのみで使用可能なため、選択肢BのprivateメソッドやEのY.super（Twoから）は不可。'
-  },
+  },,
   {
     id: 46,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
 
+
 <div class="code-block">
-  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> 抜粋（for文とswitch文）</div>
-  <pre>String[] days = {<span class="str">"Sun"</span>,<span class="str">"Mon"</span>,<span class="str">"Wed"</span>,<span class="str">"Fri"</span>,<span class="str">"Sat"</span>};
-<span class="kw">int</span> x=<span class="num">1</span>, a=<span class="num">1</span>, b=<span class="num">1</span>, y=<span class="num">0</span>;
-<span class="kw">for</span> (String d : days) {
-    <span class="kw">switch</span> (d) {
-        <span class="kw">case</span> <span class="str">"Sun"</span>: x++; <span class="kw">break</span>;
-        <span class="kw">case</span> <span class="str">"Mon"</span>: x += a++;  <span class="cmt">// fall through</span>
-        <span class="kw">case</span> <span class="str">"Wed"</span>: ++a; <span class="kw">continue</span>;
-        <span class="kw">case</span> <span class="str">"Fri"</span>: y = --b;
-        <span class="kw">case</span> <span class="str">"Sat"</span>: x += <span class="num">2</span>;
-    }
-}</pre>
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">2</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
+<span class="line-num">3</span>        <span class="kw">int</span> a = <span class="num">1</span>, b = <span class="num">1</span>, x = <span class="num">0</span>, y = <span class="num">0</span>;
+<span class="line-num">4</span>        String[] dayOfWeek = {<span class="str">"Sun"</span>, <span class="str">"Mon"</span>, <span class="str">"Wed"</span>, <span class="str">"Fri"</span>, <span class="str">"Sat"</span>};
+<span class="line-num">5</span>        <span class="kw">for</span> (String s : dayOfWeek) {
+<span class="line-num">6</span>            <span class="kw">switch</span>(s) {
+<span class="line-num">7</span>                <span class="kw">case</span> <span class="str">"Mon"</span>, <span class="str">"Tue"</span>:
+<span class="line-num">8</span>                    x += a++;
+<span class="line-num">9</span>                <span class="kw">case</span> <span class="str">"Wed"</span>:
+<span class="line-num">10</span>                    ++a;
+<span class="line-num">11</span>                    <span class="kw">continue</span>;
+<span class="line-num">12</span>                <span class="kw">case</span> <span class="str">"Thu"</span>, <span class="str">"Fri"</span>:
+<span class="line-num">13</span>                    y = --b;
+<span class="line-num">14</span>                    <span class="kw">break</span>;
+<span class="line-num">15</span>                <span class="kw">case</span> <span class="str">"Sat"</span>, <span class="str">"Sun"</span>:
+<span class="line-num">16</span>                    x += <span class="num">2</span>;
+<span class="line-num">17</span>            }
+<span class="line-num">18</span>        }
+<span class="line-num">19</span>        System.<span class="mth">out</span>.<span class="mth">println</span>(<span class="str">"x:"</span> + x + <span class="str">" y:"</span> + y);
+<span class="line-num">20</span>    }
+<span class="line-num">21</span>}</pre>
 </div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F'],
     optionTexts: [
@@ -2230,14 +2628,34 @@ Baseクラス（abstract、type="abstract"）、Fooクラス（extends Base、ty
     correctTexts: ["x:5, y:0が出力される"],
     selectCount: 1,
     explanation: 'for文とswitch文、演算子についての問題です。"Sun"でx=2（break）。"Mon"でx+=a++(x=2+1=3、その後a=2）、fall throughしてcase"Wed"でa=3、continueで次ループへ。"Wed"でcase"Wed"が実行されa=4、continueで次ループへ。"Fri"でy=--b（b=0、y=0）、fall throughしてcase"Sat"でx=3+2=5。"Sat"でx=5+2=7ではなく直前のfall throughで既にcase"Sat"が実行されているため、Satでは再度case"Sat"のみ: x=5+2=7...再確認すると最終的にx:5, y:0が正解です。'
-  },
+  },,
   {
     id: 47,
     text: `次のプログラムのコンパイルが完了しています。以下の方法で実行するとどのような結果になりますか。（1つ選択）
 
-<code style="background:var(--surface2);padding:6px 12px;border-radius:4px;font-family:JetBrains Mono,monospace;font-size:13px;display:block;margin:8px 0;">  >java Main Duke</code>
+<code style="background:var(--surface2);padding:6px 12px;border-radius:4px;font-family:JetBrains Mono,monospace;font-size:13px;display:block;margin:8px 0;">  &gt;java Main Duke</code>
 
-method()はループ3回で各回try-catch-finallyを持ち、tryでAを出力し可変長引数args[i]にアクセス。finallyは毎回Cを出力。catchはBを出力。`,
+
+<div class="code-block">
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">2</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
+<span class="line-num">3</span>        <span class="kw">new</span> <span class="cls">Main</span>().<span class="mth">method</span>(args);
+<span class="line-num">4</span>    }
+<span class="line-num">5</span>    <span class="kw">void</span> <span class="mth">method</span>(String... args) {
+<span class="line-num">6</span>        <span class="kw">for</span> (<span class="kw">var</span> i = <span class="num">0</span>; i &lt; <span class="num">3</span>; i++) {
+<span class="line-num">7</span>            <span class="kw">try</span> {
+<span class="line-num">8</span>                System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"A"</span>);
+<span class="line-num">9</span>                String s = args[i];
+<span class="line-num">10</span>            } <span class="kw">catch</span> (<span class="cls">RuntimeException</span> ex) {
+<span class="line-num">11</span>                System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"B"</span>);
+<span class="line-num">12</span>            } <span class="kw">finally</span> {
+<span class="line-num">13</span>                System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"C"</span>);
+<span class="line-num">14</span>            }
+<span class="line-num">15</span>        }
+<span class="line-num">16</span>    }
+<span class="line-num">17</span>}</pre>
+</div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F'],
     optionTexts: [
       'ADukeCが出力される',
@@ -2253,24 +2671,32 @@ method()はループ3回で各回try-catch-finallyを持ち、tryでAを出力�
     correctTexts: ["ACABCABCが出力される"],
     selectCount: 1,
     explanation: 'try-catch-finallyの実行順についての問題です。コマンドライン引数Dukeを受け取るmethod()では、3回のループの中で例外処理が行われています。1回目のループではtryでAを出力後にargs[0]（Duke）が代入されますが出力しません。finallyでCが出力されます。2回目と3回目のループではargs[i]へのアクセスでArrayIndexOutOfBoundsExceptionがスローされるため、catchでBが出力され、finallyでCが出力されます。よってACABCABCが出力されます。'
-  },
+  },,
   {
     id: 48,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
 
-<div class="code-block">
-  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> 抜粋（型変換）</div>
-  <pre><span class="kw">interface</span> <span class="cls">One</span> { String <span class="mth">name</span>(); }
-<span class="kw">class</span> <span class="cls">Base</span> { String <span class="mth">name</span>() { <span class="kw">return</span> <span class="str">"Base"</span>; } }
-<span class="kw">class</span> <span class="cls">Derived</span> <span class="kw">extends</span> <span class="cls">Base</span> <span class="kw">implements</span> <span class="cls">One</span> { ... }
 
-<span class="cls">Derived</span> d = <span class="kw">new</span> <span class="cls">Derived</span>(); <span class="cmt">// A</span>
-<span class="cls">One</span> o = d;                  <span class="cmt">// B（暗黙の変換）</span>
-System.<span class="mth">out</span>.<span class="mth">print</span>(o.<span class="mth">name</span>()); <span class="cmt">// ONE</span>
-<span class="cls">Derived</span> d2 = (<span class="cls">Derived</span>)o;    <span class="cmt">// C</span>
-System.<span class="mth">out</span>.<span class="mth">print</span>(d2.<span class="mth">name</span>()); <span class="cmt">// ONE</span>
-<span class="cls">Base</span> b2 = (<span class="cls">Base</span>)<span class="kw">new</span> <span class="cls">Base</span>(); <span class="cmt">// ...</span>
-<span class="cls">One</span> o2 = (<span class="cls">One</span>)b2;           <span class="cmt">// ClassCastException?</span></pre>
+<div class="code-block">
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">2</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String... args) {
+<span class="line-num">3</span>        <span class="cls">Base</span> b = <span class="kw">new</span> <span class="cls">Derived</span>();
+<span class="line-num">4</span>        <span class="cls">One</span> o = (<span class="cls">One</span>)b;  <span class="cmt">// (A)</span>
+<span class="line-num">5</span>        System.<span class="mth">out</span>.<span class="mth">print</span>(o.NAME);
+<span class="line-num">6</span>        <span class="cls">Derived</span> d = (<span class="cls">Derived</span>)o;  <span class="cmt">// (B)</span>
+<span class="line-num">7</span>        System.<span class="mth">out</span>.<span class="mth">print</span>(d.name);
+<span class="line-num">8</span>        o = (<span class="cls">One</span>)<span class="kw">new</span> <span class="cls">Base</span>();  <span class="cmt">// (C)</span>
+<span class="line-num">9</span>        System.<span class="mth">out</span>.<span class="mth">print</span>(o.NAME);  <span class="cmt">// (D)</span>
+<span class="line-num">10</span>    }
+<span class="line-num">11</span>}
+<span class="line-num">12</span><span class="kw">sealed interface</span> <span class="cls">One</span> <span class="kw">permits</span> <span class="cls">Derived</span> {
+<span class="line-num">13</span>    String NAME = <span class="str">"ONE"</span>;
+<span class="line-num">14</span>}
+<span class="line-num">15</span><span class="kw">sealed class</span> <span class="cls">Base</span> <span class="kw">permits</span> <span class="cls">Derived</span> {
+<span class="line-num">16</span>    <span class="kw">protected</span> String name = <span class="str">"Base"</span>;
+<span class="line-num">17</span>}
+<span class="line-num">18</span><span class="kw">final class</span> <span class="cls">Derived</span> <span class="kw">extends</span> <span class="cls">Base</span> <span class="kw">implements</span> <span class="cls">One</span> {}</pre>
 </div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F'],
     optionTexts: [
@@ -2287,18 +2713,36 @@ System.<span class="mth">out</span>.<span class="mth">print</span>(d2.<span clas
     correctTexts: ["CでClassCastExceptionがスローされる"],
     selectCount: 1,
     explanation: '参照型の型変換についての問題です。DerivedオブジェクトはBase型、One型に代入することができます。3行目でDerivedオブジェクトをOne型に代入（B）、4行目でDerived型に戻す（C）は適切です。しかしBaseオブジェクトはOneインタフェースを実装していないため、BaseオブジェクトをOne型にキャストするとClassCastExceptionがスローされます。7行目までは正常に実行できるため"ONEONE"までは出力が行われます。'
-  },
+  },,
   {
     id: 49,
-    text: `次のプログラム（抜粋）があります。16-17行目の処理と同じ結果になるものはどれですか。（1つ選択）
+    text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
+
 
 <div class="code-block">
-  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> 抜粋（instanceofパターンマッチング）</div>
-  <pre><span class="cmt">// execute()内</span>
-<span class="kw">if</span> (p <span class="kw">instanceof</span> <span class="cls">Food</span> f) {  <span class="cmt">// 16行目</span>
-    System.<span class="mth">out</span>.<span class="mth">print</span>(f.<span class="mth">name</span>());  <span class="cmt">// 17行目: SnackOrangeを出力</span>
-}</pre>
-</div>`,
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">sealed interface</span> <span class="cls">Product</span> <span class="kw">permits</span> <span class="cls">Music</span>, <span class="cls">Food</span> {}
+<span class="line-num">2</span><span class="kw">record</span> <span class="cls">Music</span>(String genre) <span class="kw">implements</span> <span class="cls">Product</span> {}
+<span class="line-num">3</span><span class="kw">record</span> <span class="cls">Food</span>(String name) <span class="kw">implements</span> <span class="cls">Product</span> {}
+<span class="line-num">4</span><span class="kw">class</span> <span class="cls">Main</span> {
+<span class="line-num">5</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
+<span class="line-num">6</span>        ArrayList&lt;<span class="cls">Product</span>&gt; list = <span class="kw">new</span> ArrayList&lt;&gt;();
+<span class="line-num">7</span>        list.<span class="mth">add</span>(<span class="kw">new</span> <span class="cls">Food</span>(<span class="str">"Waffle"</span>));
+<span class="line-num">8</span>        list.<span class="mth">add</span>(<span class="kw">new</span> <span class="cls">Food</span>(<span class="str">"Orange"</span>));
+<span class="line-num">9</span>        list.<span class="mth">add</span>(<span class="kw">new</span> <span class="cls">Music</span>(<span class="str">"Waltz"</span>));
+<span class="line-num">10</span>        list.<span class="mth">add</span>(<span class="kw">new</span> <span class="cls">Music</span>(<span class="str">"Opera"</span>));
+<span class="line-num">11</span>        list.<span class="mth">set</span>(<span class="num">0</span>, <span class="kw">new</span> <span class="cls">Food</span>(<span class="str">"Snack"</span>));
+<span class="line-num">12</span>        <span class="kw">for</span> (<span class="cls">Product</span> p : list) <span class="mth">execute</span>(p);
+<span class="line-num">13</span>    }
+<span class="line-num">14</span>    <span class="kw">static void</span> <span class="mth">execute</span>(<span class="cls">Product</span> p) {
+<span class="line-num">15</span>        <span class="kw">if</span>(p <span class="kw">instanceof</span> <span class="cls">Food</span> obj) {
+<span class="line-num">16</span>            System.<span class="mth">out</span>.<span class="mth">print</span>(obj.<span class="mth">name</span>());
+<span class="line-num">17</span>        }
+<span class="line-num">18</span>    }
+<span class="line-num">19</span>}</pre>
+</div>
+
+16-17行目の処理と同じ結果になるものはどれですか。（1つ選択）`,
     options: ['A', 'B', 'C', 'D', 'E', 'F'],
     optionTexts: [
       'if(!(p instanceof Food)) { Food f = (Food)p; System.out.print(f.toString()); }',
@@ -2314,12 +2758,36 @@ System.<span class="mth">out</span>.<span class="mth">print</span>(d2.<span clas
     correctTexts: ["if(p instanceof Food) { Food f = (Food)p; System.out.print(f.name()); }"],
     selectCount: 1,
     explanation: 'ArrayListとinstanceofについての問題です。execute()ではinstanceofでパターンマッチングを行い、pの参照がFood型の場合にname()の値を出力するため"SnackOrange"の出力となります。選択肢AはFoodでない場合（Music）にFoodにキャストするためClassCastExceptionがスローされます。選択肢BはMusicでない場合にキャストは正しいですが出力が異なります。選択肢CはProductにname()は定義されていないためコンパイルエラー。選択肢DはFood型チェック後にキャストしてname()を呼び出す正しい記述。'
-  },
+  },,
   {
     id: 50,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
 
-ネストされたtry-with-resourcesで、3つのMyReaderリソース（Reader-1、Reader-2、Reader-3）があります。外側はtry-finallyで"A:"と"B:"を出力し、内側のtryで"C:"を出力します。`,
+
+<div class="code-block">
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">class</span> <span class="cls">MyReader</span> <span class="kw">implements</span> AutoCloseable {
+<span class="line-num">2</span>    <span class="kw">private int</span> id;
+<span class="line-num">3</span>    <span class="kw">public</span> <span class="cls">MyReader</span>(<span class="kw">int</span> id) { <span class="kw">this</span>.id = id; }
+<span class="line-num">4</span>    <span class="kw">public void</span> <span class="mth">close</span>() {
+<span class="line-num">5</span>        System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"Reader-"</span> + id + <span class="str">":"</span>);
+<span class="line-num">6</span>    }
+<span class="line-num">7</span>}
+<span class="line-num">8</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">9</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
+<span class="line-num">10</span>        <span class="cls">MyReader</span> f1 = <span class="kw">new</span> <span class="cls">MyReader</span>(<span class="num">1</span>);
+<span class="line-num">11</span>        <span class="cls">MyReader</span> f2 = <span class="kw">new</span> <span class="cls">MyReader</span>(<span class="num">2</span>);
+<span class="line-num">12</span>        <span class="kw">try</span> (f1; f2;) {
+<span class="line-num">13</span>            System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"A:"</span>);
+<span class="line-num">14</span>            <span class="kw">try</span> (<span class="kw">var</span> s1 = <span class="kw">new</span> <span class="cls">MyReader</span>(<span class="num">3</span>);) {
+<span class="line-num">15</span>                System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"B:"</span>);
+<span class="line-num">16</span>            }
+<span class="line-num">17</span>        } <span class="kw">finally</span> {
+<span class="line-num">18</span>            System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"C:"</span>);
+<span class="line-num">19</span>        }
+<span class="line-num">20</span>    }
+<span class="line-num">21</span>}</pre>
+</div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F'],
     optionTexts: [
       'A:B:Reader-3:Reader-2:Reader-1:C:が出力される',
@@ -2335,28 +2803,44 @@ System.<span class="mth">out</span>.<span class="mth">print</span>(d2.<span clas
     correctTexts: ["A:B:Reader-3:Reader-2:Reader-1:C:が出力される"],
     selectCount: 1,
     explanation: 'ネストされたtry-with-resourcesの実行順についての問題です。例外がスローされないため、"A:B:"が出力されtryブロックの処理が終わると、指定と逆順でリソースのクローズ処理が行われます（Reader-3、Reader-2、Reader-1の順）。そして最後にfinallyブロックの"C:"が出力されます。'
-  },
+  },,
   {
     id: 51,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
 
+
 <div class="code-block">
-  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> 抜粋（staticとインスタンスメソッド）</div>
-  <pre><span class="kw">class</span> <span class="cls">Super</span> {
-    <span class="kw">static void</span> <span class="mth">print</span>() { System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"SUPER"</span>); }
-}
-<span class="kw">class</span> <span class="cls">Sub</span> <span class="kw">extends</span> <span class="cls">Super</span> {
-    <span class="kw">void</span> <span class="mth">print</span>() { <span class="cmt">// ← これをstaticに変えると...</span>
-        System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"SUB"</span>);
-    }
-}
-<span class="kw">public class</span> <span class="cls">Main</span> {
-    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
-        Super s = <span class="kw">new</span> <span class="cls">Sub</span>();
-        <span class="cls">Sub</span>.<span class="mth">print</span>();
-        s.<span class="mth">print</span>();  <span class="cmt">// ← 16行目</span>
-    }
-}</pre>
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">interface</span> <span class="cls">A</span> {
+<span class="line-num">2</span>    <span class="kw">default void</span> <span class="mth">operate</span>() {
+<span class="line-num">3</span>        System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"Start... "</span>);
+<span class="line-num">4</span>    }
+<span class="line-num">5</span>}
+<span class="line-num">6</span><span class="kw">class</span> <span class="cls">Super</span> {
+<span class="line-num">7</span>    <span class="kw">static void</span> <span class="mth">print</span>() {
+<span class="line-num">8</span>        System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"SUPER "</span>);
+<span class="line-num">9</span>    }
+<span class="line-num">10</span>}
+<span class="line-num">11</span><span class="kw">class</span> <span class="cls">Sub</span> <span class="kw">extends</span> <span class="cls">Super</span> <span class="kw">implements</span> <span class="cls">A</span> {
+<span class="line-num">12</span>    <span class="kw">public void</span> <span class="mth">operate</span>() {
+<span class="line-num">13</span>        <span class="cls">A</span>.<span class="kw">super</span>.<span class="mth">operate</span>();
+<span class="line-num">14</span>        System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"Sub#Start... "</span>);
+<span class="line-num">15</span>    }
+<span class="line-num">16</span>    <span class="kw">public void</span> <span class="mth">print</span>() {
+<span class="line-num">17</span>        <span class="kw">super</span>.<span class="mth">print</span>();
+<span class="line-num">18</span>        System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"SUB "</span>);
+<span class="line-num">19</span>    }
+<span class="line-num">20</span>}
+<span class="line-num">21</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">22</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
+<span class="line-num">23</span>        <span class="cls">A</span> a = <span class="kw">new</span> <span class="cls">Sub</span>();
+<span class="line-num">24</span>        <span class="cls">Super</span> su = <span class="kw">new</span> <span class="cls">Super</span>();
+<span class="line-num">25</span>        a.<span class="mth">operate</span>();
+<span class="line-num">26</span>        <span class="cls">Sub</span> sub = (<span class="cls">Sub</span>)a;
+<span class="line-num">27</span>        sub.<span class="mth">print</span>();
+<span class="line-num">28</span>        su.<span class="mth">print</span>();
+<span class="line-num">29</span>    }
+<span class="line-num">30</span>}</pre>
 </div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
     optionTexts: [
@@ -2374,7 +2858,7 @@ System.<span class="mth">out</span>.<span class="mth">print</span>(d2.<span clas
     correctTexts: ["コンパイルエラーが発生する"],
     selectCount: 1,
     explanation: 'staticとインスタンスについての問題です。SuperクラスのstataicメソッドとSubクラスのインスタンスメソッドにはオーバーライド関係は成り立たず、16行目でコンパイルエラーとなります。（Superクラスのstaticメソッドをインスタンスメソッドでオーバーライドしようとしているため）'
-  },
+  },,
   {
     id: 52,
     text: '次のローカル変数の宣言のうち、コンパイルエラーが発生するものはどれですか。（3つ選択）',
@@ -2394,10 +2878,30 @@ System.<span class="mth">out</span>.<span class="mth">print</span>(d2.<span clas
     correctTexts: ["public var x = \"1_000_000\".length();", "static final Integer INTVALUE = 1_000;", "boolean true = true;"],
     selectCount: 3,
     explanation: 'ローカル変数の宣言についての問題です。選択肢B、Eはpublicやstaticはクラスのメンバに指定する修飾子でローカル変数には使用できません。選択肢Gのtrueはboolean型のリテラルであり変数名には使用できません。選択肢Aの"$"や"_"は識別子として使用可能。選択肢CはfinalはローカルにOK、Math.random()からdouble型と推論可能。選択肢Dはvarを変数名として使用しており紛らわしいが宣言としては適切。'
-  },
+  },,
   {
     id: 53,
-    text: '次のプログラムを正しく説明しているものはどれですか。（3つ選択）\n（抽象クラス、インタフェース、sealed、レコードの修飾子に関する問題）',
+    text: `次のプログラムを正しく説明しているものはどれですか。（3つ選択）
+
+
+<div class="code-block">
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">abstract class</span> <span class="cls">A</span> {
+<span class="line-num">2</span>    <span class="kw">public</span> <span class="cls">A</span>() {}  <span class="cmt">// (A)</span>
+<span class="line-num">3</span>    <span class="kw">public abstract void</span> <span class="mth">methodX</span>();  <span class="cmt">// (B)</span>
+<span class="line-num">4</span>    <span class="kw">final void</span> <span class="mth">methodY</span>() {}  <span class="cmt">// (C)</span>
+<span class="line-num">5</span>}
+<span class="line-num">6</span><span class="kw">final class</span> <span class="cls">B</span> <span class="kw">extends</span> <span class="cls">A</span> {
+<span class="line-num">7</span>    <span class="kw">public void</span> <span class="mth">methodX</span>() {}  <span class="cmt">// (D)</span>
+<span class="line-num">8</span>}
+<span class="line-num">9</span><span class="kw">sealed interface</span> <span class="cls">Foo</span> {  <span class="cmt">// (E)</span>
+<span class="line-num">10</span>    <span class="kw">void</span> <span class="mth">methodZ</span>();
+<span class="line-num">11</span>}
+<span class="line-num">12</span><span class="kw">non-sealed interface</span> <span class="cls">Bar</span> <span class="kw">extends</span> <span class="cls">Foo</span> {}  <span class="cmt">// (F)</span>
+<span class="line-num">13</span><span class="kw">non-sealed record</span> <span class="cls">Product</span>(<span class="kw">int</span> id) <span class="kw">implements</span> <span class="cls">Foo</span> {  <span class="cmt">// (G)</span>
+<span class="line-num">14</span>    <span class="kw">public void</span> <span class="mth">methodZ</span>(){}
+<span class="line-num">15</span>}</pre>
+</div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
     optionTexts: [
       'クラスAはインスタンス化ができないため、Aのコンストラクタも記述できない',
@@ -2414,12 +2918,32 @@ System.<span class="mth">out</span>.<span class="mth">print</span>(d2.<span clas
     correctTexts: ["Cのようにfinalクラスでなくてもfinalメソッドを宣言することはできる", "DのようにクラスBをfinalにする場合はmethodX()のオーバーライドが必須となる", "インタフェースにシールされたインタフェースを継承する場合、Fのようにfinal以外を指定する必要がある"],
     selectCount: 3,
     explanation: 'クラスやインタフェースなどに指定できる修飾子についての問題です。選択肢A、Bは誤り（抽象クラスのコンストラクタは宣言可能。インタフェースの抽象メソッドはpublic abstractが暗黙指定ですが抽象クラスのメソッドには明示的なabstractが必要）。選択肢C、Dは正しい説明。選択肢Eは誤り（sealedインタフェースでも同一ファイル内にサブクラスがある場合はpermitsを省略可能）。選択肢Fは正しく、インタフェースの場合はsealedかnon-sealedを指定します。選択肢Gは誤り（レコードは暗黙的にfinalのため、sealedやnon-sealedの指定はできません）。'
-  },
+  },,
   {
     id: 54,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
 
-StringとStringBuilderのequals()、equalsIgnoreCase()、lastIndexOf()、charAt()などのメソッドを使用したif文の問題です。各条件の結果に応じてA〜Eの文字が出力されます。`,
+
+<div class="code-block">
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">2</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
+<span class="line-num">3</span>        <span class="cls">StringBuilder</span> sb1 = <span class="kw">new</span> <span class="cls">StringBuilder</span>(<span class="str">"hello"</span>);
+<span class="line-num">4</span>        <span class="cls">StringBuilder</span> sb2 = <span class="kw">new</span> <span class="cls">StringBuilder</span>(<span class="str">"bonjour"</span>);
+<span class="line-num">5</span>        sb2.<span class="mth">append</span>(<span class="str">"!"</span>);
+<span class="line-num">6</span>        String hello = sb1.<span class="mth">toString</span>();
+<span class="line-num">7</span>        String s1 = <span class="str">"HELLO"</span>;
+<span class="line-num">8</span>        String s2 = <span class="str">"BONJOUR!"</span>;
+<span class="line-num">9</span>        <span class="kw">if</span>(sb1.<span class="mth">equals</span>(hello)) System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"A"</span>);
+<span class="line-num">10</span>        <span class="kw">if</span>(hello.<span class="mth">equalsIgnoreCase</span>(s1)) System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"B"</span>);
+<span class="line-num">11</span>        <span class="kw">if</span>(s2.<span class="mth">equals</span>(sb2.<span class="mth">toString</span>())) System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"C"</span>);
+<span class="line-num">12</span>        <span class="kw">if</span>(s1.<span class="mth">length</span>() == <span class="num">4</span> || sb2.<span class="mth">lastIndexOf</span>(<span class="str">"o"</span>) == <span class="num">4</span>)
+<span class="line-num">13</span>            System.<span class="mth">out</span>.<span class="mth">println</span>(<span class="str">"D"</span>);
+<span class="line-num">14</span>        <span class="kw">if</span>(s2.<span class="mth">charAt</span>(<span class="num">6</span>) ==<span class="str">'!'</span> &amp;&amp; sb2.<span class="mth">charAt</span>(<span class="num">6</span>) == <span class="str">'!'</span>)
+<span class="line-num">15</span>            System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"E"</span>);
+<span class="line-num">16</span>    }
+<span class="line-num">17</span>}</pre>
+</div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F'],
     optionTexts: [
       'ABCDEが出力される',
@@ -2435,22 +2959,26 @@ StringとStringBuilderのequals()、equalsIgnoreCase()、lastIndexOf()、charAt(
     correctTexts: ["BDが出力される"],
     selectCount: 1,
     explanation: 'StringとStringBuilderクラスのメソッドについての問題です。9行目はStringBuilderにequals()がないためObjectクラスのequals()が使われfalseです（Aが出力されない）。10行目のequalsIgnoreCase()はtrueなのでBが出力されます。11行目のequals()は大文字/小文字を区別するためfalse（Cは出力されない）。12行目のlastIndexOf()がtrueなのでDが出力されます。14行目のcharAt()がfalseのため&&全体もfalse（Eは出力されない）。よってBDが出力されます。'
-  },
+  },,
   {
     id: 55,
-    text: `次のプログラム（抜粋）があります。9行目に記述するとコンパイルエラーが発生するものはどれですか。（2つ選択）
+    text: `次のプログラム（抜粋）があります。
+
 
 <div class="code-block">
-  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> 抜粋（throwsのオーバーライド）</div>
-  <pre><span class="kw">class</span> <span class="cls">MyIOException</span> <span class="kw">extends</span> IOException {}
-<span class="kw">class</span> <span class="cls">MyException</span> <span class="kw">extends</span> Exception {}
-<span class="kw">interface</span> <span class="cls">Calculable</span> {
-    <span class="kw">void</span> <span class="mth">calc</span>(<span class="kw">double</span> d) <span class="kw">throws</span> IOException;
-}
-<span class="kw">class</span> <span class="cls">CalcImpl</span> <span class="kw">implements</span> <span class="cls">Calculable</span> {
-    <span class="cmt">// 9行目: calc()のオーバーライド</span>
-}</pre>
-</div>`,
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java（抜粋）</div>
+  <pre><span class="line-num">1</span><span class="kw">class</span> <span class="cls">MyIOException</span> <span class="kw">extends</span> IOException {}
+<span class="line-num">2</span><span class="kw">class</span> <span class="cls">MyException</span> <span class="kw">extends</span> Exception {}
+<span class="line-num">3</span><span class="kw">class</span> <span class="cls">Base</span> {
+<span class="line-num">4</span>    <span class="kw">public void</span> <span class="mth">calc</span>(<span class="kw">double</span> d) <span class="kw">throws</span> IOException {}
+<span class="line-num">5</span>}
+<span class="line-num">6</span><span class="kw">class</span> <span class="cls">Sub</span> <span class="kw">extends</span> <span class="cls">Base</span> {
+<span class="line-num">7</span>    <span class="kw">@Override</span>
+<span class="line-num">8</span>    <span class="cmt">// insert code here</span>
+<span class="line-num">9</span>}</pre>
+</div>
+
+9行目に記述するとコンパイルエラーが発生するものはどれですか。（2つ選択）`,
     options: ['A', 'B', 'C', 'D', 'E', 'F'],
     optionTexts: [
       'public void calc(double d) throws RuntimeException {}',
@@ -2466,27 +2994,28 @@ StringとStringBuilderのequals()、equalsIgnoreCase()、lastIndexOf()、charAt(
     correctTexts: ["public void calc(double d) throws Exception {}", "public void calc(double d) throws MyException {}"],
     selectCount: 2,
     explanation: 'throwsが指定されたメソッドのオーバーライドについての問題です。オーバーライド元のthrowsにチェック例外が指定されている場合、オーバーライドするメソッドは同じ例外・そのサブクラス・throwsの省略のみ許可されます。選択肢CのExceptionはIOExceptionのスーパークラスのためエラー。選択肢FのMyExceptionはIOExceptionのサブクラスではないためエラー。選択肢AはRuntimeExceptionは非チェック例外のため任意に指定可能。選択肢EのMyIOExceptionはIOExceptionのサブクラスなのでOK。'
-  },
+  },,
   {
     id: 56,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
 
+
 <div class="code-block">
   <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
-  <pre><span class="kw">class</span> <span class="cls">Other</span> {
-    <span class="kw">static int</span> x = <span class="num">0</span>;
-    <span class="kw">int</span> y = <span class="num">0</span>;
-    <span class="cls">Other</span>() { x++; y++; }
-    <span class="kw">static void</span> <span class="mth">print</span>(Other o) {
-        System.<span class="mth">out</span>.<span class="mth">println</span>(<span class="str">"x:"</span>+x--+<span class="str">", y:"</span>+o.y--);
-    }
-}
-<span class="kw">public class</span> <span class="cls">Main</span> {
-    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
-        Other o1=<span class="kw">new</span> <span class="cls">Other</span>(), o2=<span class="kw">new</span> <span class="cls">Other</span>(), o3=<span class="kw">new</span> <span class="cls">Other</span>(), o4=<span class="kw">new</span> <span class="cls">Other</span>();
-        Other.<span class="mth">print</span>(o4);
-    }
-}</pre>
+  <pre><span class="line-num">1</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">2</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String... args) {
+<span class="line-num">3</span>        <span class="kw">new</span> <span class="cls">Other</span>(); <span class="kw">new</span> <span class="cls">Other</span>(); <span class="kw">new</span> <span class="cls">Other</span>();
+<span class="line-num">4</span>        <span class="kw">new</span> <span class="cls">Other</span>().<span class="mth">print</span>();
+<span class="line-num">5</span>    }
+<span class="line-num">6</span>}
+<span class="line-num">7</span><span class="kw">class</span> <span class="cls">Other</span> {
+<span class="line-num">8</span>    <span class="kw">private static int</span> x;
+<span class="line-num">9</span>    <span class="kw">private int</span> y;
+<span class="line-num">10</span>    <span class="kw">public</span> <span class="cls">Other</span>() { ++x; ++y; }
+<span class="line-num">11</span>    <span class="kw">public void</span> <span class="mth">print</span>() {
+<span class="line-num">12</span>        System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"x:"</span> + x-- + <span class="str">", y:"</span> + y--);
+<span class="line-num">13</span>    }
+<span class="line-num">14</span>}</pre>
 </div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F'],
     optionTexts: [
@@ -2503,25 +3032,27 @@ StringとStringBuilderのequals()、equalsIgnoreCase()、lastIndexOf()、charAt(
     correctTexts: ["x:4, y:1が出力される"],
     selectCount: 1,
     explanation: 'staticとインスタンスについての問題です。Otherのコンストラクタにはxとyをインクリメントする処理があります。オブジェクトを4つ生成しているためstatic変数xの値は4、インスタンス変数yの値はオブジェクトごとに1になります。printメソッド内にはx--、y--の演算がありますが後置デクリメントのため出力された後に減算されます。よって出力時の値はx:4, y:1のままです。'
-  },
+  },,
   {
     id: 57,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
 
+
 <div class="code-block">
-  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> 抜粋（基本データ型と参照型）</div>
-  <pre><span class="kw">class</span> <span class="cls">OneClass</span> { <span class="kw">float</span> value = <span class="num">35.0</span>F; }
-<span class="kw">public class</span> <span class="cls">Main</span> {
-    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
-        OneClass one = <span class="kw">new</span> <span class="cls">OneClass</span>();
-        OneClass another = one;        <span class="cmt">// 同じオブジェクト</span>
-        <span class="kw">float</span> x = <span class="num">25.0</span>F;
-        <span class="kw">float</span> y = x;                  <span class="cmt">// 値のコピー</span>
-        x = <span class="num">50.0</span>F;
-        one.value -= <span class="num">10</span>;              <span class="cmt">// 35-10=25</span>
-        System.<span class="mth">out</span>.<span class="mth">println</span>(x+<span class="str">":"</span>+y+<span class="str">":"</span>+one.value+<span class="str">":"</span>+another.value);
-    }
-}</pre>
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">class</span> <span class="cls">OneClass</span> { <span class="kw">double</span> value = <span class="num">25.0</span>; }
+<span class="line-num">2</span><span class="kw">class</span> <span class="cls">Main</span> {
+<span class="line-num">3</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
+<span class="line-num">4</span>        <span class="cls">OneClass</span> one = <span class="kw">new</span> <span class="cls">OneClass</span>();  <span class="cmt">// (A)</span>
+<span class="line-num">5</span>        <span class="cls">OneClass</span> another = one;
+<span class="line-num">6</span>        <span class="kw">float</span> x = <span class="num">25.0</span>F;
+<span class="line-num">7</span>        <span class="kw">float</span> y = x;
+<span class="line-num">8</span>        one.value -= <span class="num">10</span>;  <span class="cmt">// (B)</span>
+<span class="line-num">9</span>        x *= <span class="num">2</span>;  <span class="cmt">// (C)</span>
+<span class="line-num">10</span>        System.<span class="mth">out</span>.<span class="mth">println</span>(x + <span class="str">":"</span> + y + <span class="str">":"</span>
+<span class="line-num">11</span>                + one.value + <span class="str">":"</span> + another.value);
+<span class="line-num">12</span>    }
+<span class="line-num">13</span>}</pre>
 </div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'],
     optionTexts: [
@@ -2540,22 +3071,36 @@ StringとStringBuilderのequals()、equalsIgnoreCase()、lastIndexOf()、charAt(
     correctTexts: ["50.0:25.0:25.0:25.0が出力される"],
     selectCount: 1,
     explanation: '基本データ型と参照型についての問題です。基本データ型変数への代入は値のコピーとなるため、xは50.0F、yは25.0Fと別の値が管理されます。一方参照型は参照情報のコピーであり、参照先のオブジェクトは1つのため、one.valueで10減らした値（35-10=25）は、another.valueでアクセスした場合も同じ値となります。よって50.0:25.0:25.0:25.0が出力されます。'
-  },
+  },,
   {
     id: 58,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
 
+
 <div class="code-block">
-  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> 抜粋（try-with-resources）</div>
-  <pre><span class="kw">try</span> (<span class="cls">Resource</span> r1 = <span class="kw">new</span> <span class="cls">Resource</span>(<span class="str">"Resource1"</span>);
-     <span class="cls">Resource</span> r2 = <span class="kw">new</span> <span class="cls">Resource</span>(<span class="str">"Resource2"</span>)) {
-    System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"try: "</span>);
-    <span class="cmt">// r2.close()がExceptionをスロー</span>
-} <span class="kw">catch</span> (Exception e) {
-    System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"catch:Exception! "</span>);
-} <span class="kw">finally</span> {
-    System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"finally: "</span>);
-}</pre>
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">class</span> <span class="cls">MyResource</span> <span class="kw">implements</span> AutoCloseable {
+<span class="line-num">2</span>    <span class="kw">private</span> String name;
+<span class="line-num">3</span>    <span class="kw">public</span> <span class="cls">MyResource</span>(String name) {
+<span class="line-num">4</span>        <span class="kw">this</span>.name = name;
+<span class="line-num">5</span>    }
+<span class="line-num">6</span>    <span class="kw">public void</span> <span class="mth">close</span>() <span class="kw">throws</span> Exception {
+<span class="line-num">7</span>        System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"close:"</span> + name);
+<span class="line-num">8</span>        <span class="kw">throw</span> <span class="kw">new</span> Exception(<span class="str">"Exception! "</span>);
+<span class="line-num">9</span>    }
+<span class="line-num">10</span>}
+<span class="line-num">11</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">12</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
+<span class="line-num">13</span>        <span class="kw">try</span> (<span class="kw">var</span> r1 = <span class="kw">new</span> <span class="cls">MyResource</span>(<span class="str">"Resource1: "</span>);
+<span class="line-num">14</span>             <span class="kw">var</span> r2 = <span class="kw">new</span> <span class="cls">MyResource</span>(<span class="str">"Resource2: "</span>)) {
+<span class="line-num">15</span>            System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"try: "</span>);
+<span class="line-num">16</span>        } <span class="kw">catch</span> (Exception e) {
+<span class="line-num">17</span>            System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"catch:"</span> + e.<span class="mth">getMessage</span>());
+<span class="line-num">18</span>        } <span class="kw">finally</span> {
+<span class="line-num">19</span>            System.<span class="mth">out</span>.<span class="mth">print</span>(<span class="str">"finally:"</span>);
+<span class="line-num">20</span>        }
+<span class="line-num">21</span>    }
+<span class="line-num">22</span>}</pre>
 </div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F'],
     optionTexts: [
@@ -2572,22 +3117,22 @@ StringとStringBuilderのequals()、equalsIgnoreCase()、lastIndexOf()、charAt(
     correctTexts: ["try: close:Resource2: close:Resource1: catch:Exception! finally:が出力される"],
     selectCount: 1,
     explanation: 'try-with-resourcesの実行順についての問題です。リソースのクローズは指定と逆順になります。例外がスローされる場合もcloseの処理が先に行われるため、try → close → catch → finallyブロックの実行順となります。r2のcloseでExceptionがスローされますが、まずr2のcloseが実行され、次にr1のcloseが実行されます。その後catchブロック、最後にfinallyが実行されます。'
-  },
+  },,
   {
     id: 59,
     text: `次のプログラムを正しく説明しているものはどれですか。（2つ選択）
 
+
 <div class="code-block">
-  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> パッケージ構成</div>
-  <pre><span class="cmt">// ex/Main.java (package ex)</span>
-<span class="kw">import</span> ex.b.*;  <span class="cmt">// B</span>
-<span class="kw">public class</span> <span class="cls">Main</span> {
-    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
-        <span class="kw">new</span> <span class="cls">Bar</span>(); <span class="cmt">// C: Barはpackage-private</span>
-    }
-}
-<span class="cmt">// ex/a/Foo.java (package ex.a)</span>
-<span class="cmt">// ex/b/Bar.java (package ex.b) - publicなし</span></pre>
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> ex6¥Main.java</div>
+  <pre><span class="line-num">1</span><span class="kw">package</span> ex;
+<span class="line-num">2</span><span class="kw">import</span> ex.a.Foo;  <span class="cmt">// (A)</span>
+<span class="line-num">3</span><span class="kw">import</span> ex.b.*;  <span class="cmt">// (B)</span>
+<span class="line-num">4</span><span class="kw">public class</span> <span class="cls">Main</span> {
+<span class="line-num">5</span>    <span class="kw">public static void</span> <span class="mth">main</span>(String[] args) {
+<span class="line-num">6</span>        <span class="kw">new</span> <span class="cls">Foo</span>(); <span class="kw">new</span> <span class="cls">Bar</span>();  <span class="cmt">// (C)</span>
+<span class="line-num">7</span>    }
+<span class="line-num">8</span>}</pre>
 </div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
     optionTexts: [
@@ -2605,21 +3150,22 @@ StringとStringBuilderのequals()、equalsIgnoreCase()、lastIndexOf()、charAt(
     correctTexts: ["Main.javaのコンパイルにおいてCの行が原因でコンパイルエラーが発生する", "Foo.javaとBar.javaはそれぞれ単体でコンパイルが成功する"],
     selectCount: 2,
     explanation: 'パッケージとインポート宣言についての問題です。import宣言で「*」が使用できるのはクラスの指定のみのためA（import ex.*.*）は誤りです。選択肢Cは正解：Barクラスにはpublicが指定されていないため、異なるパッケージに所属するMainクラスからのインスタンス化はできず、new Bar()がコンパイルエラーの原因となります。選択肢BのインポートはBarクラスを明示的に指定していないためコンパイルエラーにはなりません。選択肢FはFooとBarはMainクラスを必要としていないため単体でコンパイルが成功します。'
-  },
+  },,
   {
     id: 60,
     text: `次のプログラムをコンパイル、実行するとどのような結果になりますか。（1つ選択）
 
+
 <div class="code-block">
-  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Book.java（レコード）</div>
-  <pre><span class="kw">record</span> <span class="cls">Book</span>(<span class="kw">int</span> id, String title, String genre) {
-    <span class="cls">Book</span> {  <span class="cmt">// コンパクトコンストラクタ</span>
-        genre = genre.<span class="mth">toUpperCase</span>();
-    }
-    <span class="kw">public int</span> <span class="mth">id</span>() { <span class="kw">return</span> id + <span class="num">100</span>; } <span class="cmt">// オーバーライド</span>
-    <span class="kw">public</span> String <span class="mth">getTitle</span>() { <span class="kw">return</span> title.<span class="mth">strip</span>(); }
-    <span class="kw">void</span> <span class="mth">setGenre</span>(String g) { genre = g; } <span class="cmt">// ← 17行目: エラー</span>
-}</pre>
+  <div class="code-block-header"><span class="dot dot-red"></span><span class="dot dot-yellow"></span><span class="dot dot-green"></span> Book.java</div>
+  <pre><span class="line-num">1</span><span class="kw">record</span> <span class="cls">Book</span>(<span class="kw">int</span> id, String title, String genre) {
+<span class="line-num">2</span>    <span class="cls">Book</span> {  <span class="cmt">// コンパクトコンストラクタ</span>
+<span class="line-num">3</span>        genre = genre.<span class="mth">toUpperCase</span>();
+<span class="line-num">4</span>    }
+<span class="line-num">5</span>    <span class="kw">public int</span> <span class="mth">id</span>() { <span class="kw">return</span> id + <span class="num">100</span>; }
+<span class="line-num">6</span>    <span class="kw">public</span> String <span class="mth">getTitle</span>() { <span class="kw">return</span> title.<span class="mth">strip</span>(); }
+<span class="line-num">7</span>    <span class="kw">void</span> <span class="mth">setGenre</span>(String g) { genre = g; }  <span class="cmt">// 17行目</span>
+<span class="line-num">8</span>}</pre>
 </div>`,
     options: ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
     optionTexts: [
@@ -2639,7 +3185,6 @@ StringとStringBuilderのequals()、equalsIgnoreCase()、lastIndexOf()、charAt(
     explanation: 'レコードの本体に宣言するコンストラクタやメンバについての問題です。レコードコンポーネントから生成されるメンバ変数はprivate finalな定数となるため、17行目でgenreの値を変更する処理でコンパイルエラーになります。'
   }
 ];
-
 // ============================
 // SUPABASE + localStorage HYBRID
 // ============================
