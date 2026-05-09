@@ -664,6 +664,21 @@
   .mth { color: #d2a8ff; }      /* methods */
   .ann { color: #56d364; }      /* annotations */
 
+
+  /* SHUFFLE TOGGLE */
+  .toggle-track {
+    width: 44px; height: 24px; background: var(--surface);
+    border: 1.5px solid var(--border); border-radius: 12px;
+    cursor: pointer; position: relative; transition: all 0.2s;
+  }
+  .toggle-track.on { background: var(--java-orange); border-color: var(--java-orange); }
+  .toggle-thumb {
+    width: 18px; height: 18px; background: var(--text-dim);
+    border-radius: 50%; position: absolute; top: 2px; left: 2px;
+    transition: all 0.2s;
+  }
+  .toggle-track.on .toggle-thumb { left: 22px; background: #fff; }
+
   /* FLAG BUTTON */
   .btn-flag { background:transparent; color:var(--warning); border:1.5px solid var(--warning); font-size:13px; opacity:0.8; }
   .btn-flag:hover:not(:disabled) { opacity:1; background:rgba(210,156,34,0.08); }
@@ -771,7 +786,18 @@
       <div class="stat-card"><span class="num">65%</span><span class="label">合格ライン（目安）</span></div>
       <div class="stat-card"><span class="num">90分</span><span class="label">制限時間</span></div>
     </div>
-    <p style="color:var(--warning);font-size:13px;margin-bottom:20px;">⚠️ 選択肢の並び順はランダムです。ダブルクリックで選択肢を除外できます。</p>
+    <p style="color:var(--text-dim);font-size:13px;margin-bottom:16px;">ダブルクリックで選択肢を除外できます。</p>
+    <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:20px;padding:12px 20px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;width:fit-content;margin-left:auto;margin-right:auto;">
+      <label class="toggle-label" for="shuffle-toggle" style="font-size:14px;color:var(--text);cursor:pointer;user-select:none;">
+        🔀 選択肢をランダムに並べる
+      </label>
+      <div class="toggle-wrap">
+        <input type="checkbox" id="shuffle-toggle" style="display:none">
+        <div class="toggle-track" onclick="document.getElementById('shuffle-toggle').click();this.classList.toggle('on')">
+          <div class="toggle-thumb"></div>
+        </div>
+      </div>
+    </div>
     <div class="mode-btns">
       <button class="btn-mode primary" onclick="startExam('all')">🚀 全問出題（60問）</button>
       <button class="btn-mode" onclick="startExam('weak')">★ 苦手問題のみ</button>
@@ -2706,6 +2732,7 @@ let answered      = {};  // { qIndex: true }
 let dontKnow      = {};  // { qIndex: true }
 let excluded      = {};  // { qIndex: Set<optText> }
 let shuffledOpts  = {};  // { qIndex: [{letter,text},...] }  — shuffled order
+let shuffleEnabled = false; // デフォルトはオフ
 let timerInterval = null;
 let remainingSeconds = 90 * 60;
 let examMode = 'all';    // 'all' | 'weak' | 'wrong'
@@ -2729,7 +2756,7 @@ function getShuffledOpts(qIndex) {
   const q = sessionQuestions[qIndex];
   const letters = 'ABCDEFGH'.split('').slice(0, q.optionTexts.length);
   const pairs = letters.map((l, i) => ({ letter: l, text: q.optionTexts[i] }));
-  shuffledOpts[qIndex] = shuffle(pairs);
+  shuffledOpts[qIndex] = shuffleEnabled ? shuffle(pairs) : pairs;
   return shuffledOpts[qIndex];
 }
 
@@ -2737,6 +2764,7 @@ function getShuffledOpts(qIndex) {
 // INIT / START
 // ============================
 function startExam(mode) {
+  shuffleEnabled = document.getElementById('shuffle-toggle').checked;
   examMode = mode || 'all';
   if (mode === 'weak') {
     const flagged = Object.keys(storage.flags).filter(k => storage.flags[k]);
